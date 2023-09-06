@@ -1,0 +1,53 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model FrontendUser {
+  id                 String   @id @default(cuid())
+  username           String   @unique(map: "username") @db.VarChar(255)
+  email              String   @unique(map: "email") @db.VarChar(255)
+  name               String   @db.VarChar(255)
+  passwordResetToken String?  @map("password_reset_token")
+  passwordHash       String?  @map("password_hash") @db.Text
+  status             Int      @default(0)
+  createdAt          DateTime @default(now()) @map("created_at") @db.Timestamp(0)
+  updatedAt          DateTime @updatedAt @map("updated_at") @db.Timestamp(0)
+
+  @@index([passwordResetToken])
+  @@map("tb_auth_user")
+}
+
+model AdminUser {
+  id                 String   @id @default(cuid())
+  username           String   @unique(map: "username")
+  email              String   @unique(map: "email") @db.VarChar(255)
+  name               String
+  passwordResetToken String?  @map("password_reset_token")
+  passwordHash       String?  @map("password_hash") @db.Text
+  status             Int      @default(0)
+  createdAt          DateTime @default(now()) @map("created_at") @db.Timestamp(0)
+  updatedAt          DateTime @updatedAt @map("updated_at") @db.Timestamp(0)
+
+  // 1-to-many Relations
+  roles AdminRole[]
+
+  @@index([passwordResetToken])
+  @@map("tb_auth_admin_user")
+}
+
+model AdminRole {
+  name        String @id
+  description String @db.Text
+
+  users AdminUser[]
+
+  @@map("tb_auth_admin_role")
+}
