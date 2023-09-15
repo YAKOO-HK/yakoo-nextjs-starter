@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils';
 export interface DatePickerProps {
   name: string;
   value?: Date;
-  onChange: (date?: Date | null) => unknown;
+  onChange?: (date?: Date | null) => unknown;
   placeholder?: string;
   className?: string;
   allowClear?: boolean;
@@ -38,7 +38,7 @@ export function DatePicker({ name, value, onChange, placeholder, className, allo
                 className="mx-2 my-1"
                 size="sm"
                 onClick={() => {
-                  onChange(null);
+                  onChange?.(null);
                 }}
               >
                 <XCircleIcon className="mr-2 h-4 w-4" />
