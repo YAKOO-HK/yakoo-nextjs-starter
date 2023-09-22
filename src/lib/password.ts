@@ -1,4 +1,4 @@
-import { randomBytes, scryptSync } from 'crypto';
+import { randomBytes, scryptSync } from 'node:crypto';
 import { env } from '@/env';
 import 'server-only';
 

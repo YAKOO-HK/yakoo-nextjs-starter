@@ -41,10 +41,13 @@ async function getAdminUsers(searchParams: Partial<AdminUserSearchParams>) {
       status: true,
       createdAt: true,
       updatedAt: true,
-      roles: {
+      authAssignments: {
         select: {
-          name: true,
-          description: true,
+          authItem: {
+            select: {
+              name: true,
+            },
+          },
         },
       },
     },
@@ -65,7 +68,7 @@ async function getAdminUsers(searchParams: Partial<AdminUserSearchParams>) {
 export type AdminUserRow = UnwrapArray<Awaited<ReturnType<typeof getAdminUsers>>['items']>;
 
 export const GET = withAdminRole(
-  'admin',
+  'sysadmin',
   withSearchParamsValidation(AdminUserSearchSchema, async (req, query) => {
     const result = await getAdminUsers(query);
     return responseJson(result);
@@ -73,7 +76,7 @@ export const GET = withAdminRole(
 );
 
 export const POST = withAdminRole(
-  'admin',
+  'sysadmin',
   withBodyValidation(AdminUserCreateSchema, async (_req, { roleNames, ...body }) => {
     // check username and email is unique
     const dbIssues: ZodIssue[] = [];
@@ -91,8 +94,8 @@ export const POST = withAdminRole(
       data: {
         ...body,
         passwordHash: '',
-        roles: {
-          connect: roleNames.map((name) => ({ name })),
+        authAssignments: {
+          create: (roleNames ?? []).map((name) => ({ authItem: { connect: { name } } })),
         },
       },
       select: {

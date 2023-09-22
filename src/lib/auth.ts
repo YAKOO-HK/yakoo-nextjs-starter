@@ -1,25 +1,20 @@
 import { cache } from 'react';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
+import { AdminUser, FrontendUser } from '@prisma/client';
 import { AuthOptions, getServerSession } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import querystring from 'qs';
-import { UserLoginSchema, type UserLoginFormData } from '@/types/user';
+import { USER_STATUS_ACTIVE, UserLoginSchema, type UserLoginFormData } from '@/types/user';
 import { verifyPassword } from './password';
 import { prisma } from './prisma';
 import 'server-only';
 
 async function handleFrontendLogin(loginForm: UserLoginFormData) {
   const user = await prisma.frontendUser.findFirst({
-    where: {
-      username: loginForm.username,
-      status: 10,
-    },
+    where: { username: loginForm.username, status: USER_STATUS_ACTIVE },
   });
-  if (!user || !user.passwordHash) {
-    return null;
-  }
-  if (!verifyPassword(loginForm.password, user.passwordHash)) {
+  if (!user || !user.passwordHash || !verifyPassword(loginForm.password, user.passwordHash)) {
     return null;
   }
   return {
@@ -32,15 +27,9 @@ async function handleFrontendLogin(loginForm: UserLoginFormData) {
 
 async function handleAdminLogin(loginForm: UserLoginFormData) {
   const user = await prisma.adminUser.findFirst({
-    where: {
-      username: loginForm.username,
-      status: 10,
-    },
+    where: { username: loginForm.username, status: USER_STATUS_ACTIVE },
   });
-  if (!user || !user.passwordHash) {
-    return null;
-  }
-  if (!verifyPassword(loginForm.password, user.passwordHash)) {
+  if (!user || !user.passwordHash || !verifyPassword(loginForm.password, user.passwordHash)) {
     return null;
   }
   return {
@@ -127,12 +116,30 @@ export const getSessionUser = cache(async function () {
   return session?.user ?? null;
 });
 
+export const getActiveFrontendUser = cache(async (id: FrontendUser['id']) => {
+  return await prisma.frontendUser.findUnique({
+    where: { id, status: USER_STATUS_ACTIVE },
+    select: { id: true, username: true, email: true, name: true },
+  });
+});
+
 export const requireFrontendUser = cache(async function () {
   const session = await getServerSession(authOptions);
   if (session?.user?.type !== 'frontend') {
     return redirect(`/login?callbackUrl=${getRedirectUrl()}`);
   }
+  const dbUser = await getActiveFrontendUser(session.user.id);
+  if (!dbUser) {
+    return redirect(`/logout?callbackUrl=${getRedirectUrl()}`);
+  }
   return session.user;
+});
+
+export const getActiveAdminUser = cache(async (id: AdminUser['id']) => {
+  return await prisma.adminUser.findUnique({
+    where: { id, status: USER_STATUS_ACTIVE },
+    select: { id: true, username: true, email: true, name: true },
+  });
 });
 
 export const requireAdminUser = cache(async function () {
@@ -140,5 +147,9 @@ export const requireAdminUser = cache(async function () {
   if (session?.user?.type !== 'admin') {
     return redirect(`/admin/login?callbackUrl=${getRedirectUrl()}`);
   }
-  return session.user;
+  const dbUser = await getActiveAdminUser(session.user.id);
+  if (!dbUser) {
+    return redirect(`/admin/logout?callbackUrl=${getRedirectUrl()}`);
+  }
+  return dbUser;
 });

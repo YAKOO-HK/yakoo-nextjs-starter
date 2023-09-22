@@ -10,7 +10,7 @@ function useAsyncMutationData<TData, TVariables = DeepPartial<TData>>({
   onSuccess,
   queryOptions,
   useSuperJson = true,
-  method = 'PATCH',
+  method = 'PUT',
   disableToast,
 }: {
   url: string;

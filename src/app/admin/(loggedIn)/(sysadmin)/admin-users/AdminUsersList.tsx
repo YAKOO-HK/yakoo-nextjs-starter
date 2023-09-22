@@ -70,6 +70,18 @@ const UserRow = ({ rowData, refetch }: { rowData: AdminUserRow; refetch: () => v
       <TableCell>
         <UpdateAdminUserStatusDialog id={rowData.id} status={rowData.status} refetch={refetch} />
       </TableCell>
+      <TableCell>
+        <div className="inline-flex flex-row flex-wrap items-center gap-1">
+          {rowData.authAssignments.map(({ authItem }) => (
+            <span
+              key={authItem.name}
+              className="rounded-lg bg-accent px-2.5 py-0.5 text-xs font-medium text-accent-foreground"
+            >
+              {authItem.name}
+            </span>
+          ))}
+        </div>
+      </TableCell>
       <TableCell>{rowData.createdAt && format(rowData.createdAt, 'yyyy-MM-dd HH:mm:ss')}</TableCell>
       <TableCell>
         <div className="flex flex-row items-center space-x-2">
@@ -126,10 +138,11 @@ const UserRow = ({ rowData, refetch }: { rowData: AdminUserRow; refetch: () => v
 };
 
 const COLUMNS = [
-  { id: 'id', label: 'Net ID', sortable: true },
+  { id: 'username', label: 'Username', sortable: true },
   { id: 'name', label: 'Name', sortable: true },
   { id: 'email', label: 'Email', sortable: true },
   { id: 'status', label: 'Status', sortable: true },
+  { id: 'roles', label: 'Roles', sortable: false },
   { id: 'createdAt', label: 'Created At', sortable: true },
   { id: 'actions', label: '', sortable: false },
 ];
@@ -137,7 +150,7 @@ const COLUMNS = [
 const searchStateAtom = atom<SearchState>({
   page: 0,
   pageSize: 20,
-  sort: { key: 'createdAt', asc: false },
+  sort: { key: 'id', asc: false },
   form: {},
   totalElements: 0,
   totalPages: 0,

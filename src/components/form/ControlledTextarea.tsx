@@ -7,7 +7,7 @@ import { Textarea, TextareaProps } from '@/components/ui/textarea';
 
 export type ControlledTextareaProps<
   TFieldValues extends FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 > = TextareaProps &
   Omit<ControllerProps<TFieldValues, TName>, 'render'> & {
     label?: React.ReactNode;
@@ -20,7 +20,7 @@ export type ControlledTextareaProps<
 
 export function ControlledTextarea<
   TFieldValues extends FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 >({
   id,
   control,

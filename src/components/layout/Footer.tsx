@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
 
@@ -6,26 +7,16 @@ export function Footer({ className }: { className?: string }) {
     <footer className={cn('flex justify-center bg-neutral-700 px-4 py-2 text-white md:justify-end', className)}>
       <div>
         <div className="mb-1 flex items-center justify-center space-x-6 text-xs leading-loose md:justify-end md:text-sm">
-          <a
-            href="https://www.yakoo.com.hk/privacy-policy/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:underline"
-          >
+          <Link href="/privacy-policy" className="hover:underline">
             Privacy Policy
-          </a>
+          </Link>
           <Separator orientation="vertical" className="h-[1rem] bg-current" />
-          <a
-            href="https://www.yakoo.com.hk/web-accessibility/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:underline"
-          >
+          <Link href="/web-accessibility" className="hover:underline">
             Web Accessibility
-          </a>
+          </Link>
         </div>
         <p className="text-center text-xs md:text-right">
-          Copyright © 2023 Yakoo Technology Limited. All Rights Reserved.
+          Powered by <a href="https://github.com/YAKOO-HK/yakoo-nextjs-starter">yakoo-nextjs-starter</a>.
         </p>
       </div>
     </footer>

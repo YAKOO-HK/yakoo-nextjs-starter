@@ -26,28 +26,52 @@ model FrontendUser {
 }
 
 model AdminUser {
-  id                 String   @id @default(cuid())
-  username           String   @unique(map: "username")
-  email              String   @unique(map: "email") @db.VarChar(255)
+  id                 String                @id @default(cuid())
+  username           String                @unique(map: "username")
+  email              String                @unique(map: "email") @db.VarChar(255)
   name               String
-  passwordResetToken String?  @map("password_reset_token")
-  passwordHash       String?  @map("password_hash") @db.Text
-  status             Int      @default(0)
-  createdAt          DateTime @default(now()) @map("created_at") @db.Timestamp(0)
-  updatedAt          DateTime @updatedAt @map("updated_at") @db.Timestamp(0)
-
-  // 1-to-many Relations
-  roles AdminRole[]
+  passwordResetToken String?               @map("password_reset_token")
+  passwordHash       String?               @map("password_hash") @db.Text
+  status             Int                   @default(0)
+  createdAt          DateTime              @default(now()) @map("created_at") @db.Timestamp(0)
+  updatedAt          DateTime              @updatedAt @map("updated_at") @db.Timestamp(0)
+  authAssignments    AdminAuthAssignment[]
 
   @@index([passwordResetToken])
   @@map("tb_auth_admin_user")
 }
 
-model AdminRole {
-  name        String @id
-  description String @db.Text
+model AdminAuthItem {
+  name            String                @id
+  type            Int
+  description     String                @db.Text
+  createdAt       DateTime              @default(now()) @map("created_at") @db.Timestamp(0)
+  updatedAt       DateTime              @updatedAt @map("updated_at") @db.Timestamp(0)
+  children        AdminAuthItemChild[]  @relation("child")
+  parents         AdminAuthItemChild[]  @relation("parent")
+  authAssignments AdminAuthAssignment[]
 
-  users AdminUser[]
+  @@map("tb_auth_admin_auth_item")
+}
 
-  @@map("tb_auth_admin_role")
+model AdminAuthItemChild {
+  parentName String        @map("parent")
+  childName  String        @map("child")
+  parentItem AdminAuthItem @relation(fields: [parentName], references: [name], onDelete: Cascade, onUpdate: Cascade, name: "parent")
+  childItem  AdminAuthItem @relation(fields: [childName], references: [name], onDelete: Cascade, onUpdate: Cascade, name: "child")
+
+  @@id([parentName, childName])
+  @@map("tb_auth_admin_auth_item_child")
+}
+
+model AdminAuthAssignment {
+  userId    String        @map("user_id")
+  itemName  String        @map("auth_item")
+  createdAt DateTime      @default(now()) @map("created_at") @db.Timestamp(0)
+  updatedAt DateTime      @updatedAt @map("updated_at") @db.Timestamp(0)
+  user      AdminUser     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  authItem  AdminAuthItem @relation(fields: [itemName], references: [name], onDelete: Cascade, onUpdate: Cascade)
+
+  @@id([userId, itemName])
+  @@map("tb_auth_admin_auth_assignment")
 }

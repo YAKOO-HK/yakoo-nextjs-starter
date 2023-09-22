@@ -1,54 +1,51 @@
-import { cache } from 'react';
 import { NextRequest, NextResponse } from 'next/server';
+import { Session } from 'next-auth';
 import { getServerSession } from 'next-auth/next';
-import { authOptions } from '@/lib/auth';
-import { prisma } from '../prisma';
+import { authOptions, getActiveAdminUser, getActiveFrontendUser } from '@/lib/auth';
+import { getAdminUserPermissions } from '@/lib/rbac';
 import 'server-only';
 
 export function withAuthentication(
   role: 'admin' | 'frontend',
-  handler: (req: NextRequest, ...args: any[]) => Promise<unknown> | unknown
+  handler: (req: NextRequest, ...args: any[]) => Promise<Response> | Response,
+  customRule?: (user: NonNullable<Session['user']>) => Promise<boolean> | boolean
 ) {
   return async function (req: NextRequest, ...args: any[]) {
     // console.log(args);
     const session = await getServerSession(authOptions);
-    if (!session) {
+    if (!session || !session.user) {
       return NextResponse.json(null, { status: 401 });
-    } else if (!!role && session?.user?.type !== role) {
+    } else if (!!role && session.user.type !== role) {
       return NextResponse.json(null, { status: 403 });
+    }
+    if (session.user.type === 'admin') {
+      const dbUser = await getActiveAdminUser(session.user.id);
+      if (!dbUser) {
+        return NextResponse.json(null, { status: 401 });
+      }
+    } else if (session.user.type === 'frontend') {
+      const dbUser = await getActiveFrontendUser(session.user.id);
+      if (!dbUser) {
+        return NextResponse.json(null, { status: 401 });
+      }
+    }
+
+    if (customRule && !(await customRule(session.user))) {
+      return NextResponse.json(null, { status: 401 });
     }
     return handler(req, ...args);
   };
 }
 
-export const hasAdminRole = cache(async function (id: string, roleName: string) {
-  const count = await prisma.adminUser.count({
-    where: {
-      id,
-      roles: {
-        some: {
-          name: roleName,
-        },
-      },
-    },
-  });
-  return !count;
-});
-
 export function withAdminRole(
-  adminRole: string,
-  handler: (req: NextRequest, ...args: any[]) => Promise<unknown> | unknown
+  role: string,
+  handler: (req: NextRequest, ...args: any[]) => Promise<Response> | Response
 ) {
-  return async function (req: NextRequest, ...args: any[]) {
-    // console.log(args);
-    const session = await getServerSession(authOptions);
-    if (!session) {
-      return NextResponse.json(null, { status: 401 });
-    } else if (session?.user?.type !== 'admin') {
-      return NextResponse.json(null, { status: 403 });
-    } else if (!hasAdminRole(session.user.id, adminRole)) {
-      return NextResponse.json(null, { status: 403 });
+  return withAuthentication('admin', handler, async (user) => {
+    const roleAndPermissions = await getAdminUserPermissions(user.id);
+    if (!roleAndPermissions.roles.has(role)) {
+      return false;
     }
-    return handler(req, ...args);
-  };
+    return true;
+  });
 }

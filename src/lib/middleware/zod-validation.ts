@@ -5,7 +5,7 @@ import 'server-only';
 
 export function withBodyValidation<T extends z.ZodSchema>(
   schema: T,
-  handler: (req: NextRequest, body: z.infer<T>, ...args: any[]) => unknown | Promise<unknown>,
+  handler: (req: NextRequest, body: z.infer<T>, ...args: any[]) => Promise<Response> | Response,
   options: {
     status?: number;
     useSuperJson?: boolean;
@@ -26,9 +26,31 @@ export function withBodyValidation<T extends z.ZodSchema>(
   };
 }
 
+export function withFormDataValidation<T extends z.ZodSchema>(
+  schema: T,
+  handler: (req: NextRequest, body: z.infer<T>, ...args: any[]) => Promise<Response> | Response,
+  options: {
+    status?: number;
+    useSuperJson?: boolean;
+  } = {}
+) {
+  return async function (req: NextRequest, ...args: any[]) {
+    try {
+      const formData = await req.formData();
+      const body = await schema.parse(formData);
+      return await handler(req, body, ...args);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return responseJson(error.issues, { status: options.status ?? 422 }, options.useSuperJson);
+      }
+      throw error;
+    }
+  };
+}
+
 export function withParamsValidation<T extends z.ZodSchema>(
   schema: T,
-  handler: (req: NextRequest, params: z.infer<T>, ...args: any[]) => unknown | Promise<unknown>,
+  handler: (req: NextRequest, params: z.infer<T>, ...args: any[]) => Promise<Response> | Response,
   options: {
     status?: number;
     useSuperJson?: boolean;
@@ -49,7 +71,7 @@ export function withParamsValidation<T extends z.ZodSchema>(
 
 export function withSearchParamsValidation<T extends z.ZodSchema>(
   schema: T,
-  handler: (req: NextRequest, params: z.infer<T>, ...args: any[]) => unknown | Promise<unknown>,
+  handler: (req: NextRequest, params: z.infer<T>, ...args: any[]) => Promise<Response> | Response,
   options: {
     status?: number;
     useSuperJson?: boolean;

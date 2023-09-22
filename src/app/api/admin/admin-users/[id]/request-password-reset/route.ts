@@ -5,18 +5,15 @@ import { withAdminRole } from '@/lib/middleware/authentication';
 import { createPasswordResetToken } from '@/lib/password';
 import { prisma } from '@/lib/prisma';
 
-export const POST = withAdminRole('admin', async (_req, { params: { id } }: { params: { id: string } }) => {
+export const POST = withAdminRole('sysadmin', async (_req, { params: { id } }: { params: { id: string } }) => {
   let admin = await prisma.adminUser.findUnique({ where: { id } });
   if (!admin) {
     return responseJson(null, { status: 404 });
   }
-
   const passwordResetToken = createPasswordResetToken();
   admin = await prisma.adminUser.update({
     where: { id: admin.id },
-    data: {
-      passwordResetToken,
-    },
+    data: { passwordResetToken },
   });
 
   await getDefaultMailer().sendMail({
