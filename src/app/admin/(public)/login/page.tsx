@@ -1,4 +1,5 @@
 import { type Metadata } from 'next';
+import Image from 'next/image';
 import { redirect } from 'next/navigation';
 import { getSessionUser } from '@/lib/auth';
 import { AdminLoginForm } from './AdminLoginForm';
@@ -15,7 +16,9 @@ export default async function AdminLoginPage({ searchParams }: { searchParams: {
   }
   return (
     <div className="container max-w-screen-md py-4">
-      <header className="mb-4 text-xl">Yakoo NextJS Starter Template</header>
+      <div className="flex justify-center p-2">
+        <Image src="/images/logo.png" width={180} height={180} alt="Logo" />
+      </div>
       <AdminLoginForm />
     </div>
   );

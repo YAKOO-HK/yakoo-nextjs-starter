@@ -1,5 +1,8 @@
 import { z } from 'zod';
 
+export const USER_STATUS_ACTIVE = 10;
+export const USER_STATUS_INACTIVE = 0;
+
 export const UserLoginSchema = z.object({
   username: z.string().min(1, { message: 'Required.' }),
   password: z.string().min(1, { message: 'Required.' }),

@@ -1,10 +1,10 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { AdminRole } from '@prisma/client';
 import { useQuery } from '@tanstack/react-query';
 import { Loader2Icon } from 'lucide-react';
 import SuperJSON from 'superjson';
+import BackButton from '@/components/BackButton';
 import { ControlledDropdown } from '@/components/form/ControlledDropdown';
 import { ControlledTextField } from '@/components/form/ControlledTextField';
 import { ZodForm } from '@/components/form/ZodForm';
@@ -18,8 +18,9 @@ import { AdminUserCreateFormData, AdminUserCreateSchema } from '@/types/admin/ad
 
 const AdminUserCreateForm = () => {
   const { data: roles } = useQuery({
-    queryKey: ['/api/values/admin-roles'],
-    queryFn: () => fetch('/api/values/admin-roles').then(fetchResponseHandler<AdminRole[]>()),
+    queryKey: ['/api/admin/values/admin-roles'],
+    queryFn: () =>
+      fetch('/api/admin/values/admin-roles').then(fetchResponseHandler<{ name: string; description: string }[]>()),
     initialData: [],
   });
   const router = useRouter();
@@ -102,11 +103,12 @@ const AdminUserCreateForm = () => {
             )}
           />
         </CardContent>
-        <CardFooter>
+        <CardFooter className="md:space-x-2">
           <Button type="submit" disabled={isSubmitting}>
             {isSubmitting && <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />}
             Save
           </Button>
+          <BackButton>Cancel</BackButton>
         </CardFooter>
       </Card>
     </ZodForm>

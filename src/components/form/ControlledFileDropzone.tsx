@@ -6,7 +6,7 @@ import { FileDropzoneField, type FileDropzoneFieldProps } from './FileDropzoneFi
 
 export interface ControlledFileDropzoneProps<
   TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 > extends Omit<ControllerProps<TFieldValues, TName>, 'render'>,
     Omit<FileDropzoneFieldProps, 'defaultValue' | 'name' | 'onChange' | 'value'> {
   label?: React.ReactNode;
@@ -17,7 +17,7 @@ export interface ControlledFileDropzoneProps<
 
 const ControlledFileDropzone = <
   TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 >({
   label,
   description,

@@ -13,7 +13,7 @@ import { UserLoginSchema, type UserLoginFormData } from '@/types/user';
 export function LoginForm() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const callbackUrl = searchParams.get('callbackUrl') ?? '/';
+  const callbackUrl = searchParams.get('callbackUrl') || '/';
   const [isPendingTransition, startTransition] = useTransition();
   const methods = useZodForm({
     zodSchema: UserLoginSchema,

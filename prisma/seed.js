@@ -1,4 +1,4 @@
-const { randomBytes, scryptSync } = require('crypto');
+const { randomBytes, scryptSync } = require('node:crypto');
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
@@ -10,11 +10,12 @@ function createPasswordHash(password) {
 
 const load = async () => {
   try {
-    const role = await prisma.adminRole.upsert({
-      where: { name: 'admin' },
+    const sysAdminRole = await prisma.adminAuthItem.upsert({
+      where: { name: 'sysadmin' },
       create: {
-        name: 'admin',
+        name: 'sysadmin',
         description: 'System Administrator',
+        type: 1,
       },
       update: {},
     });
@@ -27,8 +28,8 @@ const load = async () => {
         email: 'admin@test.com',
         passwordHash: createPasswordHash('abcd1234'),
         status: 10,
-        roles: {
-          connect: { name: role.name },
+        authAssignments: {
+          create: { itemName: sysAdminRole.name },
         },
       },
       update: {},

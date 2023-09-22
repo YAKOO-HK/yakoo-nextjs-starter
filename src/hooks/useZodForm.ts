@@ -39,7 +39,7 @@ function addServerErrors<TFieldValues extends FieldValues>(
 export type useZodFormProps<
   TZodSchema extends z.Schema,
   TFieldValues extends FieldValues = z.infer<TZodSchema>,
-  TContext = any
+  TContext = any,
 > = UseFormProps<TFieldValues, TContext> & {
   zodSchema: TZodSchema;
   onSubmit?: (data: TFieldValues) => unknown | Promise<unknown>;
@@ -49,7 +49,7 @@ export type useZodFormProps<
 function useZodForm<
   TZodSchema extends z.Schema,
   TFieldValues extends FieldValues = z.infer<TZodSchema>,
-  TContext = any
+  TContext = any,
 >({ onSubmit, onError, zodSchema, ...props }: useZodFormProps<TZodSchema, TFieldValues, TContext>) {
   const { handleSubmit, setError, clearErrors, ...form } = useForm<TFieldValues, TContext>({
     resolver: zodResolver(zodSchema),

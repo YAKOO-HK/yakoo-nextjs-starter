@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import { ChevronDownIcon, SettingsIcon, UserIcon, Users2Icon, UsersIcon } from 'lucide-react';
 import { Header } from '@/components/layout/admin/Header';
@@ -5,6 +6,7 @@ import { LeftDrawer } from '@/components/layout/admin/LeftDrawer';
 import { Main } from '@/components/layout/admin/Main';
 import { NavMenu, NavMenuButton, NavMenuLinkItem } from '@/components/layout/admin/NavMenu';
 import { LogoutDropdownMenuItem } from '@/components/LogoutButton';
+import { RequireAdminRole } from '@/components/rbac/admin';
 import { SimpleCollapsible } from '@/components/SimpleCollapsible';
 import { Button } from '@/components/ui/button';
 import {
@@ -16,19 +18,21 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { requireAdminUser } from '@/lib/auth';
-import { RequireAdminRole } from './RequireAdminRole';
 
 export default async function AdminLoggedInLayout({ children }: { children: React.ReactNode }) {
   const adminUser = await requireAdminUser();
   return (
     <div className="relative min-h-screen flex-col bg-neutral-50">
       <LeftDrawer>
+        <div className="flex justify-center p-2">
+          <Image src="/images/logo.png" width={60} height={60} alt="" />
+        </div>
         <NavMenu>
           <NavMenuLinkItem href="/admin/frontend-users">
             <UsersIcon className="mr-4 h-6 w-6" />
             Frontend Users
           </NavMenuLinkItem>
-          <RequireAdminRole roleName="admin">
+          <RequireAdminRole role="sysadmin">
             <SimpleCollapsible
               triggerButton={
                 <NavMenuButton>
@@ -65,7 +69,7 @@ export default async function AdminLoggedInLayout({ children }: { children: Reac
             <DropdownMenuItem asChild>
               <Link href="/admin/account">My Profile</Link>
             </DropdownMenuItem>
-            <LogoutDropdownMenuItem />
+            <LogoutDropdownMenuItem callbackUrl="/admin/login" />
           </DropdownMenuContent>
         </DropdownMenu>
       </Header>

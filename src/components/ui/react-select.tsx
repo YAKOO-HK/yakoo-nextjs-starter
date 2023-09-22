@@ -11,7 +11,7 @@ import { cn } from '@/lib/utils';
 export function ReactSelectOption<
   Option = unknown,
   IsMulti extends boolean = false,
-  Group extends GroupBase<Option> = GroupBase<Option>
+  Group extends GroupBase<Option> = GroupBase<Option>,
 >({ innerProps, label, isSelected, isDisabled, isFocused }: OptionProps<Option, IsMulti, Group>) {
   return (
     <div
@@ -32,7 +32,7 @@ export function ReactSelectOption<
 function ReactSelectDropdownIndicator<
   Option = unknown,
   IsMulti extends boolean = false,
-  Group extends GroupBase<Option> = GroupBase<Option>
+  Group extends GroupBase<Option> = GroupBase<Option>,
 >({ innerProps }: DropdownIndicatorProps<Option, IsMulti, Group>) {
   return (
     <div {...innerProps}>
@@ -44,7 +44,7 @@ function ReactSelectDropdownIndicator<
 function ReactSelectClearIndicator<
   Option = unknown,
   IsMulti extends boolean = false,
-  Group extends GroupBase<Option> = GroupBase<Option>
+  Group extends GroupBase<Option> = GroupBase<Option>,
 >({ innerProps }: ClearIndicatorProps<Option, IsMulti, Group>) {
   return (
     <div {...innerProps}>
@@ -56,7 +56,7 @@ function ReactSelectClearIndicator<
 export interface ReactSelectProps<
   TOption extends { code: string; name: string },
   IsMulti extends boolean,
-  Group extends GroupBase<TOption> = GroupBase<TOption>
+  Group extends GroupBase<TOption> = GroupBase<TOption>,
 > extends Omit<
     React.ComponentPropsWithRef<typeof Select<TOption, IsMulti, Group>>,
     'unstyled' | 'classNames' | 'components'
@@ -67,7 +67,7 @@ export interface ReactSelectProps<
 export function ReactSelect<
   TOption extends { code: string; name: string },
   IsMulti extends boolean = false,
-  Group extends GroupBase<TOption> = GroupBase<TOption>
+  Group extends GroupBase<TOption> = GroupBase<TOption>,
 >({
   isError,
   noOptionsMessage = () => 'No Options',

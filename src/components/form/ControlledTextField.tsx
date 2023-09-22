@@ -5,7 +5,7 @@ import { Input, InputProps } from '@/components/ui/input';
 
 export interface ControlledTextFieldProps<
   TFieldValues extends FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 > extends Omit<ControllerProps<TFieldValues, TName>, 'render'>,
     Omit<InputProps, 'name' | 'defaultValue'> {
   label?: ReactNode;
@@ -16,7 +16,7 @@ export interface ControlledTextFieldProps<
 
 function ControlledTextField<
   TFieldValues extends FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 >({
   control,
   name,

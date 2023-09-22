@@ -13,7 +13,7 @@ import { UserLoginSchema } from '@/types/user';
 const AdminLoginForm = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const callbackUrl = searchParams.get('callbackUrl') ?? '/admin/dashboard';
+  const callbackUrl = searchParams.get('callbackUrl') || '/admin/dashboard';
   const [isPending, startTransition] = useTransition();
   const methods = useZodForm({
     zodSchema: UserLoginSchema,

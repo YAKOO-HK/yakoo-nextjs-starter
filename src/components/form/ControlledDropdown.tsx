@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils';
 
 export interface ControlledDropdownProps<
   TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 > extends Omit<ControllerProps<TFieldValues, TName>, 'render'>,
     Omit<React.ComponentProps<typeof Select>, 'name' | 'defaultValue'> {
   allowEmpty?: boolean;
@@ -25,7 +25,7 @@ export interface ControlledDropdownProps<
 
 export const ControlledDropdown = <
   TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 >({
   control,
   name,
@@ -62,7 +62,7 @@ export const ControlledDropdown = <
             {...props}
             onValueChange={(v) => onChange(v as PathValue<TFieldValues, TName>)}
             name={name}
-            value={(typeof value === 'number' || typeof value ==='boolean'? `${value}` : value) || ''}
+            value={(typeof value === 'number' || typeof value === 'boolean' ? `${value}` : value) || ''}
             onOpenChange={(open) => {
               if (!open) {
                 onBlur();

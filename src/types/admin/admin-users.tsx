@@ -19,10 +19,15 @@ export const AdminUserCreateSchema = z.object({
 export type AdminUserCreateFormData = z.infer<typeof AdminUserCreateSchema>;
 
 export const AdminUserPatchSchema = z.object({
-  username: z.string().trim().optional(),
-  name: z.string().trim().optional(),
-  email: z.string().trim().email().optional(),
   status: z.coerce.number().optional(),
-  roleNames: z.array(z.string().trim()).optional(),
 });
 export type AdminUserPatchFormData = z.infer<typeof AdminUserPatchSchema>;
+
+export const AdminUserPutSchema = z.object({
+  username: z.string().trim(),
+  name: z.string().trim(),
+  email: z.string().trim().email(),
+  status: z.coerce.number(),
+  roleNames: z.array(z.string().trim()),
+});
+export type AdminUserPutFormData = z.infer<typeof AdminUserPutSchema>;

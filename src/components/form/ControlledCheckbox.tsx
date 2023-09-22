@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils';
 
 export interface ControlledCheckboxProps<
   TFieldValues extends FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 > extends Omit<ControllerProps<TFieldValues, TName>, 'render'>,
     Omit<React.ComponentProps<typeof Checkbox>, 'name' | 'defaultValue'> {
   label?: React.ReactNode;
@@ -17,7 +17,7 @@ export interface ControlledCheckboxProps<
 
 const ControlledCheckbox = <
   TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 >({
   id,
   control,
