@@ -5,7 +5,7 @@ import * as z from 'zod';
 
 function convertError(zodErrors?: z.ZodIssue[]) {
   const errors: Record<string, string> = {};
-  console.log(zodErrors);
+  // console.log(zodErrors);
   zodErrors?.forEach((r) => {
     const field = r.path?.join('.') || 'root';
     errors[field] = r.message;
@@ -62,7 +62,7 @@ function useZodForm<
         try {
           return await onSubmit?.(values);
         } catch (e) {
-          console.log(e);
+          // console.log(e);
           const errors = handle422(e);
           addServerErrors(errors, setError);
           onError?.(errors, e);

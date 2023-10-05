@@ -4,6 +4,7 @@
     "hcaptcha",
     "lucide",
     "superjson",
-    "tanstack"
+    "tanstack",
+    "Totp"
   ]
 }

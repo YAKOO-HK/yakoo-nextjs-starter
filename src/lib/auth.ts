@@ -5,18 +5,45 @@ import { AdminUser, FrontendUser } from '@prisma/client';
 import { AuthOptions, getServerSession } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import querystring from 'qs';
+import { Totp } from 'time2fa';
+import { TotpConfigSchema } from '@/types/totp';
 import { USER_STATUS_ACTIVE, UserLoginSchema, type UserLoginFormData } from '@/types/user';
 import { verifyPassword } from './password';
 import { prisma } from './prisma';
 import 'server-only';
 
+class LoginError extends Error {
+  constructor(code: 'invalid-credentials' | 'otp-required' | 'invalid-otp') {
+    super(code);
+    this.name = 'LoginError';
+    Object.setPrototypeOf(this, LoginError.prototype);
+  }
+}
+
 async function handleFrontendLogin(loginForm: UserLoginFormData) {
   const user = await prisma.frontendUser.findFirst({
     where: { username: loginForm.username, status: USER_STATUS_ACTIVE },
+    include: { totp: true },
   });
   if (!user || !user.passwordHash || !verifyPassword(loginForm.password, user.passwordHash)) {
-    return null;
+    // console.log(loginForm, user);
+    throw new LoginError('invalid-credentials');
   }
+  if (user.enableMfa && user.totp?.secret) {
+    if (!loginForm.totp) {
+      throw new LoginError('otp-required');
+    }
+    const config = TotpConfigSchema.safeParse(user.totp.config ?? {});
+    if (
+      !Totp.validate(
+        { passcode: loginForm.totp, secret: user.totp.secret },
+        config.success ? { ...config.data } : undefined
+      )
+    ) {
+      throw new LoginError('invalid-otp');
+    }
+  }
+
   return {
     id: user.id,
     email: user.email,
@@ -30,7 +57,7 @@ async function handleAdminLogin(loginForm: UserLoginFormData) {
     where: { username: loginForm.username, status: USER_STATUS_ACTIVE },
   });
   if (!user || !user.passwordHash || !verifyPassword(loginForm.password, user.passwordHash)) {
-    return null;
+    throw new LoginError('invalid-credentials');
   }
   return {
     id: user.id,
@@ -55,6 +82,7 @@ export const authOptions: AuthOptions = {
       credentials: {
         username: { label: 'Email', type: 'text' },
         password: { label: 'Password', type: 'password' },
+        totp: { label: 'Time-Based One-Time Password', type: 'text' },
         type: { label: 'Role', type: 'text' },
       },
       async authorize(credentials, _req) {
@@ -119,7 +147,7 @@ export const getSessionUser = cache(async function () {
 export const getActiveFrontendUser = cache(async (id: FrontendUser['id']) => {
   return await prisma.frontendUser.findUnique({
     where: { id, status: USER_STATUS_ACTIVE },
-    select: { id: true, username: true, email: true, name: true },
+    select: { id: true, username: true, email: true, name: true, enableMfa: true, status: true },
   });
 });
 
@@ -132,7 +160,7 @@ export const requireFrontendUser = cache(async function () {
   if (!dbUser) {
     return redirect(`/logout?callbackUrl=${getRedirectUrl()}`);
   }
-  return session.user;
+  return dbUser;
 });
 
 export const getActiveAdminUser = cache(async (id: AdminUser['id']) => {

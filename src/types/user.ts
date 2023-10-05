@@ -6,6 +6,7 @@ export const USER_STATUS_INACTIVE = 0;
 export const UserLoginSchema = z.object({
   username: z.string().min(1, { message: 'Required.' }),
   password: z.string().min(1, { message: 'Required.' }),
+  totp: z.string().trim().nullish(),
   type: z.enum(['frontend', 'admin']),
 });
 export type UserLoginFormData = z.infer<typeof UserLoginSchema>;
