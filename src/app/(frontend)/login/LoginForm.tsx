@@ -1,8 +1,9 @@
 'use client';
 
-import { useTransition } from 'react';
+import { useState, useTransition } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { signIn } from 'next-auth/react';
+import { z } from 'zod';
 import { ControlledTextField } from '@/components/form/ControlledTextField';
 import { ZodForm } from '@/components/form/ZodForm';
 import { Button } from '@/components/ui/button';
@@ -10,32 +11,43 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/componen
 import { useZodForm } from '@/hooks/useZodForm';
 import { UserLoginSchema, type UserLoginFormData } from '@/types/user';
 
+const UserLoginWithTotpSchema = UserLoginSchema.extend({ totp: z.string().trim().min(1, { message: 'Required.' }) });
 export function LoginForm() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const callbackUrl = searchParams.get('callbackUrl') || '/';
   const [isPendingTransition, startTransition] = useTransition();
+  const [showTotp, setShowTotp] = useState(false);
   const methods = useZodForm({
-    zodSchema: UserLoginSchema,
+    zodSchema: showTotp ? UserLoginWithTotpSchema : UserLoginSchema,
     defaultValues: {
       username: '',
       password: '',
+      totp: '',
       type: 'frontend',
     } satisfies UserLoginFormData,
-    onSubmit: async ({ username, password }) => {
+    onSubmit: async ({ username, password, totp }) => {
       const result = await signIn('credentials', {
         username,
         password,
+        totp,
         type: 'frontend',
         redirect: false,
       });
-      if (result?.error) {
-        methods.setError('password', { message: 'Invalid email or password.' });
-      } else {
+
+      if (result?.ok && !result?.error) {
         startTransition(() => {
           router.refresh();
           router.replace(callbackUrl);
         });
+        return;
+      }
+      if (result?.error === 'otp-required') {
+        setShowTotp(true);
+      } else if (result?.error === 'invalid-otp') {
+        methods.setError('totp', { message: 'Invalid OTP.' });
+      } else {
+        methods.setError('password', { message: 'Invalid email or password.' });
       }
     },
   });
@@ -51,10 +63,24 @@ export function LoginForm() {
           <CardTitle>Sign in to your account</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
-            <ControlledTextField control={control} label="Username" name="username" />
-            <ControlledTextField control={control} label="Password" name="password" type="password" />
-          </div>
+          {showTotp ? (
+            <div className="space-y-4">
+              <p>Please enter the 6-digit One-Time Passcode(OTP) to proceed.</p>
+              <ControlledTextField
+                key="totp"
+                control={control}
+                label="One-time Passcode"
+                name="totp"
+                placeholder="******"
+                autoComplete="off"
+              />
+            </div>
+          ) : (
+            <div className="space-y-4">
+              <ControlledTextField control={control} label="Username" name="username" />
+              <ControlledTextField control={control} label="Password" name="password" type="password" />
+            </div>
+          )}
         </CardContent>
         <CardFooter>
           <Button type="submit" disabled={isSubmitting || isPendingTransition}>

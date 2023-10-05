@@ -41,13 +41,26 @@ function ChangePasswordForm({ className }: { className?: string }) {
       </CardHeader>
       <ZodForm {...methods}>
         <CardContent className="space-y-2">
-          <ControlledTextField control={control} name="currentPassword" label="Current Password" type="password" />
-          <ControlledTextField control={control} name="password" label="New Password" type="password" />
+          <ControlledTextField
+            control={control}
+            name="currentPassword"
+            label="Current Password"
+            type="password"
+            autoComplete="off"
+          />
+          <ControlledTextField
+            control={control}
+            name="password"
+            label="New Password"
+            type="password"
+            autoComplete="off"
+          />
           <ControlledTextField
             control={control}
             name="passwordConfirmation"
             label="Confirm New Password"
             type="password"
+            autoComplete="off"
           />
         </CardContent>
         <CardFooter>

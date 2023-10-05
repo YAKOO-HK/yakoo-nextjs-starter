@@ -11,18 +11,31 @@ datasource db {
 }
 
 model FrontendUser {
-  id                 String   @id @default(cuid())
-  username           String   @unique(map: "username") @db.VarChar(255)
-  email              String   @unique(map: "email") @db.VarChar(255)
-  name               String   @db.VarChar(255)
-  passwordResetToken String?  @map("password_reset_token")
-  passwordHash       String?  @map("password_hash") @db.Text
-  status             Int      @default(0)
-  createdAt          DateTime @default(now()) @map("created_at") @db.Timestamp(0)
-  updatedAt          DateTime @updatedAt @map("updated_at") @db.Timestamp(0)
+  id                 String            @id @default(cuid())
+  username           String            @unique(map: "username") @db.VarChar(255)
+  email              String            @unique(map: "email") @db.VarChar(255)
+  name               String            @db.VarChar(255)
+  passwordResetToken String?           @map("password_reset_token")
+  passwordHash       String?           @map("password_hash") @db.Text
+  enableMfa          Boolean           @default(false) @map("enable_mfa")
+  status             Int               @default(0)
+  createdAt          DateTime          @default(now()) @map("created_at") @db.Timestamp(0)
+  updatedAt          DateTime          @updatedAt @map("updated_at") @db.Timestamp(0)
+  totp               FrontendUserTotp?
 
   @@index([passwordResetToken])
   @@map("tb_auth_user")
+}
+
+model FrontendUserTotp {
+  userId    String       @id @map("user_id")
+  secret    String       @map("secret")
+  config    Json
+  createdAt DateTime     @default(now()) @map("created_at") @db.Timestamp(0)
+  updatedAt DateTime     @updatedAt @map("updated_at") @db.Timestamp(0)
+  user      FrontendUser @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("tb_auth_user_totp")
 }
 
 model AdminUser {
