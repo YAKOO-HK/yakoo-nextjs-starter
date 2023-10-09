@@ -9,6 +9,7 @@ export interface ControlledDropdownProps<
 > extends Omit<ControllerProps<TFieldValues, TName>, 'render'>,
     Omit<React.ComponentProps<typeof Select>, 'name' | 'defaultValue'> {
   allowEmpty?: boolean;
+  emptyValue?: string;
   disabled?: boolean;
   loading?: boolean;
   init?: boolean;
@@ -33,6 +34,7 @@ export const ControlledDropdown = <
   rules,
   shouldUnregister,
   allowEmpty = true,
+  emptyValue = '__empty__',
   disabled = false,
   loading = false,
   init,
@@ -58,9 +60,16 @@ export const ControlledDropdown = <
         <FormItem className={cn('group', className)}>
           {label && <FormLabel {...labelProps}>{label}</FormLabel>}
           <Select
-            disabled={loading || disabled}
             {...props}
-            onValueChange={(v) => onChange(v as PathValue<TFieldValues, TName>)}
+            disabled={loading || disabled}
+            onValueChange={(v) => {
+              /* if allowEmpty and the emptyValue is the selected item, we update it as empty string instead */
+              if (allowEmpty && v === emptyValue) {
+                onChange('');
+              } else {
+                onChange(v as PathValue<TFieldValues, TName>);
+              }
+            }}
             name={name}
             value={(typeof value === 'number' || typeof value === 'boolean' ? `${value}` : value) || ''}
             onOpenChange={(open) => {
@@ -71,16 +80,11 @@ export const ControlledDropdown = <
           >
             <FormControl>
               <SelectTrigger {...triggerProps}>
-                <SelectValue placeholder={placeholder} />
+                <SelectValue placeholder={loading ? 'Loading...' : placeholder} />
               </SelectTrigger>
             </FormControl>
             <SelectContent {...contentProps}>
-              {loading && (
-                <SelectItem value="" disabled>
-                  Loading ...
-                </SelectItem>
-              )}
-              {!loading && allowEmpty ? <SelectItem value="">&nbsp;</SelectItem> : null}
+              {allowEmpty ? <SelectItem value={emptyValue}>&nbsp;</SelectItem> : null}
               {data &&
                 data.map((row) => (
                   <SelectItem key={row.code} value={row.code}>
