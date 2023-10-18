@@ -126,16 +126,16 @@ export function getRedirectUrl() {
   // reqHeaders.forEach((value, key) => {
   //   console.log([key, value]);
   // });
-  const path = reqHeaders.get('x-invoke-path');
-  if (!path) {
+  const url = reqHeaders.get('x-url');
+  if (!url) {
     return '';
   }
   try {
-    const searchParams = decodeURI(reqHeaders.get('x-invoke-query') ?? '{}');
-    const query = querystring.stringify(searchParams, { arrayFormat: 'repeat' });
-    return query === '' ? path : `${path}?${query}`;
+    const invokeUrl = new URL(url);
+    const query = invokeUrl.searchParams.toString();
+    return invokeUrl.pathname + (query ? `?${query}` : '');
   } catch (e: any) {
-    return path;
+    return '';
   }
 }
 
