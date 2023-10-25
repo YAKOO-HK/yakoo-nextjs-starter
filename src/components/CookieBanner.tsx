@@ -19,7 +19,7 @@ export function CookieBanner() {
       await fetch('/api/accept-cookie', { method: 'POST' });
     },
     onMutate: async () => {
-      await queryClient.cancelQueries(['/api/accept-cookie']);
+      await queryClient.cancelQueries({ queryKey: ['/api/accept-cookie'] });
       const previousValue = queryClient.getQueryData(['/api/accept-cookie']);
       queryClient.setQueryData(['/api/accept-cookie'], true);
       return { previousValue };

@@ -1,6 +1,6 @@
 import { Prisma } from '@prisma/client';
 import { ZodError, ZodIssue } from 'zod';
-import { responseJson } from '@/lib/api-utils';
+import { getOrderBy, responseJson } from '@/lib/api-utils';
 import { withAdminRole } from '@/lib/middleware/authentication';
 import { withBodyValidation, withSearchParamsValidation } from '@/lib/middleware/zod-validation';
 import { prisma } from '@/lib/prisma';
@@ -24,9 +24,7 @@ async function getAdminUsers(searchParams: Partial<AdminUserSearchParams>) {
 
   let orderBy: Prisma.AdminUserOrderByWithRelationInput = { createdAt: 'desc' };
   if (searchParams.sort) {
-    orderBy = searchParams.sort?.startsWith('-')
-      ? { [searchParams.sort.slice(1)]: 'desc' }
-      : { [searchParams.sort]: 'asc' };
+    orderBy = getOrderBy(searchParams.sort);
   }
   const pageSize = searchParams.pageSize ?? 20;
   const page = searchParams.page ?? 0;

@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { useQuery, UseQueryOptions } from '@tanstack/react-query';
+import { keepPreviousData, useQuery, UseQueryOptions } from '@tanstack/react-query';
 import { PrimitiveAtom, useAtom } from 'jotai';
 import { buildQuery, parseJson } from '@/lib/fetch-utils';
 import { SearchApiResult, type SearchState } from '@/types/search';
@@ -36,7 +36,7 @@ export default function useListData<TData, TSearchState extends SearchState = Se
   });
   const queryKey = `${baseUrl}?${querystring}`;
 
-  const { data, isPreviousData, isPlaceholderData, isInitialLoading, ...result } = useQuery<{ items: TData[] }>({
+  const { data, isPlaceholderData, ...result } = useQuery<{ items: TData[] }>({
     queryKey: [baseUrl, querystring],
     queryFn: () =>
       fetch(`${baseUrl}?${querystring}`)
@@ -52,9 +52,7 @@ export default function useListData<TData, TSearchState extends SearchState = Se
           return { items };
         }),
     initialData: { items: [] },
-    keepPreviousData: true,
-    // placeholderData: () => ({ items: [] }),
-    // placeholderData: (previousData) => previousData,
+    placeholderData: keepPreviousData,
     ...queryOptions,
   });
   // console.log({ isPreviousData, isPlaceholderData, isInitialLoading, items: data?.items ?? [] });

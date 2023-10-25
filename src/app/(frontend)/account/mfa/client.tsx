@@ -33,14 +33,14 @@ function useGenerateSecret() {
 
 function GenerateSecret() {
   const data = useAtomValue(totpAtom);
-  const { mutateAsync, isLoading } = useGenerateSecret();
+  const { mutateAsync, isPending } = useGenerateSecret();
   return data ? (
     <span className="mx-4 my-2 inline-flex">
       <CheckIcon className="mr-2 h-6 w-6 text-green-500" aria-label="Completed" />
       Done
     </span>
   ) : (
-    <Button onClick={() => mutateAsync()} disabled={isLoading} className="mx-4 my-2">
+    <Button onClick={() => mutateAsync()} disabled={isPending} className="mx-4 my-2">
       Generate new secret
     </Button>
   );

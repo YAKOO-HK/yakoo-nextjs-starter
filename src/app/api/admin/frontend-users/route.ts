@@ -1,5 +1,5 @@
 import type { Prisma } from '@prisma/client';
-import { responseJson } from '@/lib/api-utils';
+import { getOrderBy, responseJson } from '@/lib/api-utils';
 import { withAuthentication } from '@/lib/middleware/authentication';
 import { withSearchParamsValidation } from '@/lib/middleware/zod-validation';
 import { prisma } from '@/lib/prisma';
@@ -20,9 +20,7 @@ async function getFrontendUsers(searchParams: Partial<AdminFrontendUserSearchPar
 
   let orderBy: Prisma.FrontendUserOrderByWithRelationInput = { id: 'desc' };
   if (searchParams.sort) {
-    orderBy = searchParams.sort?.startsWith('-')
-      ? { [searchParams.sort.slice(1)]: 'desc' }
-      : { [searchParams.sort]: 'asc' };
+    orderBy = getOrderBy(searchParams.sort);
   }
   const pageSize = searchParams.pageSize ?? 20;
   const page = searchParams.page ?? 0;
