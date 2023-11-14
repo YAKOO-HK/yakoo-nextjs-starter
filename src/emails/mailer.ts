@@ -1,8 +1,8 @@
 import mailer from 'nodemailer';
+import type { Address } from 'nodemailer/lib/mailer';
 import type SMTPTransport from 'nodemailer/lib/smtp-transport';
 import { env } from '@/env';
 import 'server-only';
-import type { Address } from 'nodemailer/lib/mailer';
 
 export function getDefaultMailer() {
   const transporter = mailer.createTransport(

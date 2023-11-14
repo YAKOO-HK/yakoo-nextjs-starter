@@ -4,7 +4,6 @@ import { redirect } from 'next/navigation';
 import { AdminUser, FrontendUser } from '@prisma/client';
 import { AuthOptions, getServerSession } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import querystring from 'qs';
 import { Totp } from 'time2fa';
 import { TotpConfigSchema } from '@/types/totp';
 import { USER_STATUS_ACTIVE, UserLoginSchema, type UserLoginFormData } from '@/types/user';
