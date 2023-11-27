@@ -36,7 +36,7 @@ export default function useListData<TData, TSearchState extends SearchState = Se
   });
   const queryKey = `${baseUrl}?${querystring}`;
 
-  const { data, isPlaceholderData, ...result } = useQuery<{ items: TData[] }>({
+  const result = useQuery<{ items: TData[] }>({
     queryKey: [baseUrl, querystring],
     queryFn: () =>
       fetch(`${baseUrl}?${querystring}`)
@@ -97,7 +97,7 @@ export default function useListData<TData, TSearchState extends SearchState = Se
       totalPages,
       numberOfElements,
       ...others,
-      ...data,
+      ...result.data,
     },
     queryKey,
     pageChange,
