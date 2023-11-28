@@ -38,7 +38,7 @@ export function DatePicker({
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto bg-background p-0">
-          <Calendar mode="single" selected={value} onSelect={onChange} {...props} />
+          <Calendar mode="single" selected={value} onSelect={onChange} defaultMonth={value || undefined} {...props} />
           {allowClear && (
             <PopoverClose asChild>
               <Button
