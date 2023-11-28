@@ -7,7 +7,7 @@ export interface ControlledDatePickerFieldProps<
   TFieldValues extends FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 > extends Omit<ControllerProps<TFieldValues, TName>, 'render'>,
-    Omit<DatePickerProps, 'name'> {
+    Omit<DatePickerProps, 'name' | 'disabled'> {
   label?: ReactNode;
   helperText?: ReactNode;
   description?: ReactNode;
@@ -27,6 +27,7 @@ function ControlledDatePickerField<
   helperText,
   description,
   fieldProps,
+  disabled,
   ...props
 }: ControlledDatePickerFieldProps<TFieldValues, TName>) {
   return (
@@ -36,6 +37,7 @@ function ControlledDatePickerField<
       defaultValue={defaultValue}
       rules={rules}
       shouldUnregister={shouldUnregister}
+      disabled={disabled}
       render={({ field }) => (
         <FormItem {...fieldProps}>
           {label && <FormLabel>{label}</FormLabel>}

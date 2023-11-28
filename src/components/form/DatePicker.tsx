@@ -1,21 +1,29 @@
 import * as React from 'react';
 import { CalendarIcon, XCircleIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Calendar } from '@/components/ui/calendar';
+import { Calendar, type CalendarProps } from '@/components/ui/calendar';
 import { Popover, PopoverClose, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { toDate } from '@/lib/formatter';
 import { cn } from '@/lib/utils';
 
-export interface DatePickerProps {
+export type DatePickerProps = {
   name: string;
   value?: Date;
   onChange?: (date?: Date | null) => unknown;
   placeholder?: string;
   className?: string;
   allowClear?: boolean;
-}
+} & Omit<CalendarProps, 'onSelect' | 'selected' | 'mode'>;
 
-export function DatePicker({ name, value, onChange, placeholder, className, allowClear = false }: DatePickerProps) {
+export function DatePicker({
+  name,
+  value,
+  onChange,
+  placeholder,
+  className,
+  allowClear = false,
+  ...props
+}: DatePickerProps) {
   return (
     <>
       <input type="hidden" value={value?.toISOString()} name={name} />
@@ -30,7 +38,7 @@ export function DatePicker({ name, value, onChange, placeholder, className, allo
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto bg-background p-0">
-          <Calendar mode="single" selected={value} onSelect={onChange} initialFocus />
+          <Calendar mode="single" selected={value} onSelect={onChange} {...props} />
           {allowClear && (
             <PopoverClose asChild>
               <Button
