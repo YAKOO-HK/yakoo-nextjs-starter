@@ -1,13 +1,16 @@
 'use client';
 
+import Link from 'next/link';
 import { format } from 'date-fns';
 import { atom } from 'jotai';
-import { SendIcon } from 'lucide-react';
+import { PencilIcon, SendIcon } from 'lucide-react';
 import type { AdminFrontendUserRow } from '@/app/api/admin/frontend-users/route';
 import ConfirmButton from '@/components/ConfirmButton';
+import { ControlledDatePickerField } from '@/components/form/ControlledDatePickerField';
 import { ControlledDropdown } from '@/components/form/ControlledDropdown';
 import { SimpleSearchForm } from '@/components/form/SimpleSearchForm';
 import { EnhancedTable, TableCell, TableRow } from '@/components/list/table';
+import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { useToast } from '@/components/ui/use-toast';
 import useListData from '@/hooks/useListData';
@@ -21,6 +24,7 @@ const CLEAR_VALUES: AdminFrontendUserSearchParams = {
   name: '',
   email: '',
   status: '',
+  dob: null,
 };
 
 const AVAILABLE_FIELDS = [
@@ -36,8 +40,17 @@ const AVAILABLE_FIELDS = [
       { code: '10', name: 'Active' },
     ],
   },
+  {
+    name: 'dob',
+    label: 'Date of Birth',
+    FieldComponent: ControlledDatePickerField,
+    captionLayout: 'dropdown-buttons',
+    fromYear: 1900,
+    toYear: new Date().getFullYear(),
+    allowClear: true,
+  },
 ];
-const STATIC_FILTERS = ['username', 'name', 'email', 'status'];
+const STATIC_FILTERS = ['username', 'name', 'email', 'dob', 'status'];
 
 function UserSearchForm({
   form,
@@ -65,12 +78,19 @@ const UserRow = ({ rowData, refetch }: { rowData: AdminFrontendUserRow; refetch:
       <TableCell>{rowData.username}</TableCell>
       <TableCell>{rowData.name}</TableCell>
       <TableCell>{rowData.email}</TableCell>
+      <TableCell>{rowData.dob}</TableCell>
       <TableCell>
         <UpdateFrontendUserStatusDialog id={rowData.id} status={rowData.status} refetch={refetch} />
       </TableCell>
       <TableCell>{rowData.createdAt && format(rowData.createdAt, 'yyyy-MM-dd HH:mm:ss')}</TableCell>
       <TableCell>
         <div className="flex flex-row items-center space-x-2">
+          <Button asChild title="Update" className="h-8 w-8 p-0">
+            <Link href={`/admin/frontend-users/${rowData.id}`}>
+              <PencilIcon className="h-4 w-4" />
+              <span className="sr-only">Update</span>
+            </Link>
+          </Button>
           <ConfirmButton
             title="Reset Password"
             titleText="Reset Password"
@@ -100,6 +120,7 @@ const COLUMNS = [
   { id: 'username', label: 'Username', sortable: true },
   { id: 'name', label: 'Name', sortable: true },
   { id: 'email', label: 'Email', sortable: true },
+  { id: 'dob', label: 'Date of Birth', sortable: true },
   { id: 'status', label: 'Status', sortable: true },
   { id: 'createdAt', label: 'Created At', sortable: true },
   { id: 'actions', label: '', sortable: false },

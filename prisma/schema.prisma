@@ -15,6 +15,7 @@ model FrontendUser {
   username           String            @unique(map: "username") @db.VarChar(255)
   email              String            @unique(map: "email") @db.VarChar(255)
   name               String            @db.VarChar(255)
+  dob                DateTime?         @db.DateTime()
   passwordResetToken String?           @map("password_reset_token")
   passwordHash       String?           @map("password_hash") @db.Text
   enableMfa          Boolean           @default(false) @map("enable_mfa")
