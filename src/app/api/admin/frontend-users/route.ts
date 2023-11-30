@@ -1,4 +1,5 @@
 import type { Prisma } from '@prisma/client';
+import { format, parse, startOfDay } from 'date-fns';
 import { getOrderBy, responseJson } from '@/lib/api-utils';
 import { withAuthentication } from '@/lib/middleware/authentication';
 import { withSearchParamsValidation } from '@/lib/middleware/zod-validation';
@@ -17,6 +18,9 @@ async function getFrontendUsers(searchParams: Partial<AdminFrontendUserSearchPar
   if (searchParams.hasOwnProperty('status') && searchParams.status !== '') {
     where.status = { equals: searchParams.status };
   }
+  if (!!searchParams.dob) {
+    where.dob = { equals: parse(searchParams.dob, 'yyyy-MM-dd', startOfDay(new Date())) };
+  }
 
   let orderBy: Prisma.FrontendUserOrderByWithRelationInput = { id: 'desc' };
   if (searchParams.sort) {
@@ -32,6 +36,7 @@ async function getFrontendUsers(searchParams: Partial<AdminFrontendUserSearchPar
       username: true,
       name: true,
       email: true,
+      dob: true,
       status: true,
       createdAt: true,
       updatedAt: true,
@@ -42,7 +47,10 @@ async function getFrontendUsers(searchParams: Partial<AdminFrontendUserSearchPar
     skip: page * pageSize,
   });
   return {
-    items,
+    items: items.map((item) => ({
+      ...item,
+      dob: item.dob && format(item.dob, 'yyyy-MM-dd'),
+    })),
     meta: {
       totalElements: total,
       page,

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { parse, startOfDay } from 'date-fns';
 import { CalendarIcon, XCircleIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Calendar, type CalendarProps } from '@/components/ui/calendar';
@@ -8,7 +9,7 @@ import { cn } from '@/lib/utils';
 
 export type DatePickerProps = {
   name: string;
-  value?: Date;
+  value?: Date | string;
   onChange?: (date?: Date | null) => unknown;
   placeholder?: string;
   className?: string;
@@ -24,9 +25,11 @@ export function DatePicker({
   allowClear = false,
   ...props
 }: DatePickerProps) {
+  const dateValue =
+    typeof value === 'string' ? (value ? parse(value, 'yyyy-MM-dd', startOfDay(new Date())) : undefined) : value;
   return (
     <>
-      <input type="hidden" value={value?.toISOString()} name={name} />
+      <input type="hidden" value={dateValue?.toISOString()} name={name} />
       <Popover>
         <PopoverTrigger asChild>
           <Button
@@ -34,11 +37,11 @@ export function DatePicker({
             className={cn('w-full justify-start text-left font-normal', !value && 'text-muted-foreground', className)}
           >
             <CalendarIcon className="mr-2 h-4 w-4" />
-            {value ? toDate(value) : <span>{placeholder ?? ''}</span>}
+            {dateValue ? toDate(dateValue) : <span>{placeholder ?? ''}</span>}
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto bg-background p-0">
-          <Calendar mode="single" selected={value} onSelect={onChange} defaultMonth={value || undefined} {...props} />
+          <Calendar mode="single" selected={dateValue} onSelect={onChange} defaultMonth={dateValue} {...props} />
           {allowClear && (
             <PopoverClose asChild>
               <Button
