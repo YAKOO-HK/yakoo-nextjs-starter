@@ -1,19 +1,28 @@
-import { Totp } from 'time2fa';
+import { Secret, TOTP } from 'otpauth';
 import { env } from '@/env';
 import { responseJson } from '@/lib/api-utils';
 import { requireFrontendUser } from '@/lib/auth';
 import { withAuthentication } from '@/lib/middleware/authentication';
 import { withBodyValidation } from '@/lib/middleware/zod-validation';
 import { prisma } from '@/lib/prisma';
-import { TotpUpdateSchema } from '@/types/totp';
+import { TotpUpdateSchema, type TotpConfigSchema } from '@/types/totp';
 
 export const GET = withAuthentication('frontend', async function (_req) {
   const dbUser = await requireFrontendUser();
-  const { config, secret, url } = Totp.generateKey(
-    { issuer: env.NEXT_PUBLIC_SITE_URL, user: dbUser.username },
-    { secretSize: 20, period: 30, digits: 6, algo: 'sha1' } // Note: Google Authenticator only supports sha1 and 30s period
-  );
-  return responseJson({ config, secret, url });
+  const secret = new Secret({ size: 20 });
+  const config = {
+    period: 30,
+    digits: 6,
+    algorithm: 'sha1',
+  } satisfies TotpConfigSchema;
+  const totp = new TOTP({
+    label: dbUser.username,
+    issuer: env.NEXT_PUBLIC_APP_NAME,
+    secret,
+    ...config,
+  });
+
+  return responseJson({ config, secret: secret.hex, url: totp.toString() });
 });
 
 export const POST = withAuthentication(

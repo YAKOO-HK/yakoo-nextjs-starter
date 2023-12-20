@@ -4,7 +4,7 @@ import { redirect } from 'next/navigation';
 import { AdminUser, FrontendUser } from '@prisma/client';
 import { AuthOptions, getServerSession } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import { Totp } from 'time2fa';
+import { Secret, TOTP } from 'otpauth';
 import { TotpConfigSchema } from '@/types/totp';
 import { USER_STATUS_ACTIVE, UserLoginSchema, type UserLoginFormData } from '@/types/user';
 import { verifyPassword } from './password';
@@ -32,13 +32,12 @@ async function handleFrontendLogin(loginForm: UserLoginFormData) {
     if (!loginForm.totp) {
       throw new LoginError('otp-required');
     }
-    const config = TotpConfigSchema.safeParse(user.totp.config ?? {});
-    if (
-      !Totp.validate(
-        { passcode: loginForm.totp, secret: user.totp.secret },
-        config.success ? { ...config.data } : undefined
-      )
-    ) {
+    const config = TotpConfigSchema.parse(user.totp.config ?? {});
+    const totp = new TOTP({
+      secret: Secret.fromHex(user.totp.secret),
+      ...config,
+    });
+    if (totp.validate({ token: loginForm.totp, window: 1 }) == null) {
       throw new LoginError('invalid-otp');
     }
   }
