@@ -95,7 +95,7 @@ const UserRow = ({ rowData, refetch }: { rowData: AdminUserRow; refetch: () => v
             title="Reset Password"
             titleText="Reset Password"
             message="Are you sure you want to reset this user's password?"
-            className="hover:bg-yellow-700/85 h-8 w-8 bg-yellow-700 p-0 text-white"
+            className="h-8 w-8 bg-yellow-700 p-0 text-white hover:bg-yellow-700/85"
             onConfirm={async () => {
               try {
                 await fetch(`/api/admin/admin-users/${rowData.id}/request-password-reset`, { method: 'POST' }).then(
