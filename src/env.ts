@@ -42,6 +42,7 @@ export const env = createEnv({
   client: {
     // NextAuth
     NEXT_PUBLIC_SITE_URL: z.string().url().default('http://localhost:3000'),
+    NEXT_PUBLIC_APP_NAME: z.string().trim().default('Yakoo Next.js Starter'),
     // hCaptcha
     NEXT_PUBLIC_HCAPTCHA_SITEKEY: z.string().min(1).default('10000000-ffff-ffff-ffff-000000000001'),
     // GA
@@ -70,6 +71,7 @@ export const env = createEnv({
     SMTP_PASSWORD: process.env.SMTP_PASSWORD,
     PASSWORD_RESET_TOKEN_EXPIRE_IN_DAYS: process.env.PASSWORD_RESET_TOKEN_EXPIRE_IN_DAYS,
     NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
+    NEXT_PUBLIC_APP_NAME: process.env.NEXT_PUBLIC_APP_NAME,
     NEXT_PUBLIC_HCAPTCHA_SITEKEY: process.env.NEXT_PUBLIC_HCAPTCHA_SITEKEY,
     NEXT_PUBLIC_GOOGLE_ANALYTICS_MEASUREMENT_ID: process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_MEASUREMENT_ID,
   },
