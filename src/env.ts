@@ -31,6 +31,15 @@ export const env = createEnv({
       .transform((v) => v === 'true'),
     SMTP_USERNAME: z.string().nullish(),
     SMTP_PASSWORD: z.string().nullish(),
+    // SAML2
+    SAML_ENABLED: z
+      .enum(['true', 'false'])
+      .default('false')
+      .transform((v) => v === 'true'),
+    SAML_SP_CERT_PATH: z.string().trim().default('./saml2/mock-sp-cert.pem'),
+    SAML_SP_PRIVATE_KEY_PATH: z.string().trim().default('./saml2/mock-sp-private-key.pem'),
+    SAML_SP_PRIVATE_KEY_PASS: z.string().optional(),
+    SAML_IDP_METADATA_PATH: z.string().trim().default('./saml2/mock-idp-metadata.xml'),
     // App Params
     PASSWORD_RESET_TOKEN_EXPIRE_IN_DAYS: z.coerce.number().int().positive(),
   },
@@ -69,6 +78,11 @@ export const env = createEnv({
     SMTP_AUTH_SECURE: process.env.SMTP_AUTH_SECURE,
     SMTP_USERNAME: process.env.SMTP_USERNAME,
     SMTP_PASSWORD: process.env.SMTP_PASSWORD,
+    SAML_ENABLED: process.env.SAML_ENABLED,
+    SAML_SP_CERT_PATH: process.env.SAML_SP_CERT_PATH,
+    SAML_SP_PRIVATE_KEY_PATH: process.env.SAML_SP_PRIVATE_KEY_PATH,
+    SAML_SP_PRIVATE_KEY_PASS: process.env.SAML_SP_PRIVATE_KEY_PASS,
+    SAML_IDP_METADATA_PATH: process.env.SAML_IDP_METADATA_PATH,
     PASSWORD_RESET_TOKEN_EXPIRE_IN_DAYS: process.env.PASSWORD_RESET_TOKEN_EXPIRE_IN_DAYS,
     NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
     NEXT_PUBLIC_APP_NAME: process.env.NEXT_PUBLIC_APP_NAME,

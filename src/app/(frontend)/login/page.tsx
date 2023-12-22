@@ -1,6 +1,9 @@
 import React from 'react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { Button, buttonVariants } from '@/components/ui/button';
+import { env } from '@/env';
+import { cn } from '@/lib/utils';
 import { LoginForm } from './LoginForm';
 
 export const metadata: Metadata = {
@@ -18,6 +21,17 @@ export default async function LoginPage() {
         </Link>
         .
       </p>
+      {env.SAML_ENABLED ? (
+        <div>
+          <Link
+            href="/api/auth/saml2/sso-redirect"
+            prefetch={false}
+            className={cn(buttonVariants({ size: 'lg' }), 'w-48')}
+          >
+            Login with SAML
+          </Link>
+        </div>
+      ) : null}
     </div>
   );
 }
