@@ -40,7 +40,7 @@ const FileDownloadButton = React.forwardRef<HTMLButtonElement, FileDownloadButto
         }
       }}
     >
-      {children ?? <DownloadIcon className="h-4 w-4" />}
+      {children ?? <DownloadIcon className="size-4" />}
     </Button>
   );
 });

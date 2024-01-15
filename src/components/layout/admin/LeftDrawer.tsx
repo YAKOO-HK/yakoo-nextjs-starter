@@ -25,7 +25,7 @@ export function LeftDrawer({ className, children }: { className?: string; childr
         )}
         aria-expanded={isOpen}
       >
-        <ScrollArea className="h-full w-full">{children}</ScrollArea>
+        <ScrollArea className="size-full">{children}</ScrollArea>
       </div>
       <div
         className={cn('fixed inset-0 z-40 bg-black/50 transition-opacity md:hidden', {
@@ -50,7 +50,7 @@ export function LeftDrawerToggleButton() {
       className="rounded-full hover:bg-primary/50 hover:text-primary-foreground"
     >
       <span className="sr-only">Toggle Left Drawer</span>
-      <MenuIcon className="h-6 w-6" />
+      <MenuIcon className="size-6" />
     </Button>
   );
 }

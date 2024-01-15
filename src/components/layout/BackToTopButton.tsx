@@ -41,7 +41,7 @@ export function BackToTopButton() {
       title="Back to top"
     >
       <span className="sr-only">Back to top</span>
-      <ChevronUpIcon className="h-6 w-6" />
+      <ChevronUpIcon className="size-6" />
     </button>
   );
 }

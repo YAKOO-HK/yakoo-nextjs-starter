@@ -96,7 +96,7 @@ function UpdateForm({ data, onSubmit }: { data: AdminUserWithRoles; onSubmit: (d
       </CardContent>
       <CardFooter className="md:space-x-2">
         <Button type="submit" disabled={isSubmitting}>
-          {isSubmitting && <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />}
+          {isSubmitting && <Loader2Icon className="mr-2 size-4 animate-spin" />}
           Save
         </Button>
         <BackButton>Cancel</BackButton>

@@ -107,13 +107,13 @@ export function SimpleSearchForm<TZodSchema extends z.Schema, TFieldValues exten
         <CardFooter>
           <div className="flex flex-row gap-2">
             <Button type="submit" variant="default" color="primary" form={formId}>
-              <SearchIcon className="mr-1 h-4 w-4" aria-hidden="true" /> Search
+              <SearchIcon className="mr-1 size-4" aria-hidden="true" /> Search
             </Button>
             <Button type="button" variant="outline" onClick={wrapOnClear}>
-              <XIcon className="mr-1 h-4 w-4" aria-hidden="true" /> Clear
+              <XIcon className="mr-1 size-4" aria-hidden="true" /> Clear
             </Button>
             <Button type="reset" variant="outline" onClick={() => reset(defaultValues)}>
-              <SquareIcon className="mr-1 h-4 w-4" aria-hidden="true" /> Reset
+              <SquareIcon className="mr-1 size-4" aria-hidden="true" /> Reset
             </Button>
             {children}
           </div>

@@ -85,17 +85,17 @@ const UserRow = ({ rowData, refetch }: { rowData: AdminUserRow; refetch: () => v
       <TableCell>{rowData.createdAt && format(rowData.createdAt, 'yyyy-MM-dd HH:mm:ss')}</TableCell>
       <TableCell>
         <div className="flex flex-row items-center space-x-2">
-          <Button asChild title="Edit" className="h-8 w-8 p-0">
+          <Button asChild title="Edit" className="size-8 p-0">
             <Link href={`/admin/admin-users/${rowData.id}`} prefetch={false}>
               <span className="sr-only">Edit</span>
-              <EditIcon className="h-4 w-4" />
+              <EditIcon className="size-4" />
             </Link>
           </Button>
           <ConfirmButton
             title="Reset Password"
             titleText="Reset Password"
             message="Are you sure you want to reset this user's password?"
-            className="h-8 w-8 bg-yellow-700 p-0 text-white hover:bg-yellow-700/85"
+            className="size-8 bg-yellow-700 p-0 text-white hover:bg-yellow-700/85"
             onConfirm={async () => {
               try {
                 await fetch(`/api/admin/admin-users/${rowData.id}/request-password-reset`, { method: 'POST' }).then(
@@ -107,7 +107,7 @@ const UserRow = ({ rowData, refetch }: { rowData: AdminUserRow; refetch: () => v
               }
             }}
           >
-            <SendIcon className="h-4 w-4" />
+            <SendIcon className="size-4" />
             <span className="sr-only">Reset Password</span>
           </ConfirmButton>
           <ConfirmButton
@@ -123,13 +123,13 @@ const UserRow = ({ rowData, refetch }: { rowData: AdminUserRow; refetch: () => v
               }
             }}
             variant="destructive"
-            className="h-8 w-8 p-0"
+            className="size-8 p-0"
             titleText="Delete Admin User"
             message="Are you sure you want to delete this Admin User?"
             confirmText="Delete"
           >
             <span className="sr-only">Delete</span>
-            <TrashIcon className="h-4 w-4" />
+            <TrashIcon className="size-4" />
           </ConfirmButton>
         </div>
       </TableCell>

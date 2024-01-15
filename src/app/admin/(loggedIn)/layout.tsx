@@ -29,22 +29,22 @@ export default async function AdminLoggedInLayout({ children }: { children: Reac
         </div>
         <NavMenu>
           <NavMenuLinkItem href="/admin/frontend-users">
-            <UsersIcon className="mr-4 h-6 w-6" />
+            <UsersIcon className="mr-4 size-6" />
             Frontend Users
           </NavMenuLinkItem>
           <RequireAdminRole role="sysadmin">
             <SimpleCollapsible
               triggerButton={
                 <NavMenuButton>
-                  <SettingsIcon className="mr-4 h-6 w-6" />
+                  <SettingsIcon className="mr-4 size-6" />
                   Administration
-                  <ChevronDownIcon className="ml-2 h-4 w-4" />
+                  <ChevronDownIcon className="ml-2 size-4" />
                 </NavMenuButton>
               }
             >
               <NavMenu>
                 <NavMenuLinkItem href="/admin/admin-users" wrapperClassName="px-8">
-                  <Users2Icon className="mr-4 h-6 w-6" />
+                  <Users2Icon className="mr-4 size-6" />
                   Admin Users
                 </NavMenuLinkItem>
               </NavMenu>
@@ -60,7 +60,7 @@ export default async function AdminLoggedInLayout({ children }: { children: Reac
               className="h-auto rounded-full p-2 hover:bg-secondary/50 hover:text-secondary-foreground"
             >
               <span className="sr-only">Open</span>
-              <UserIcon className="h-6 w-6" />
+              <UserIcon className="size-6" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">

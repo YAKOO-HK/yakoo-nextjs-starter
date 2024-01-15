@@ -79,7 +79,7 @@ export function UpdateAdminUserStatusDialog({
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger title={status === 10 ? 'Active' : 'Disabled'} className="inline-flex items-center">
-        <div className={cn('mr-2 h-4 w-4 rounded-full', status === 10 ? 'bg-green-500' : 'bg-red-500')} />
+        <div className={cn('mr-2 size-4 rounded-full', status === 10 ? 'bg-green-500' : 'bg-red-500')} />
         <span>{status === 10 ? 'Active' : 'Disabled'}</span>
       </DialogTrigger>
       <DialogContent>

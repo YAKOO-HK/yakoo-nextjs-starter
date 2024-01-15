@@ -18,7 +18,7 @@ export default async function AdminUserPage() {
             href="/admin/admin-users/create"
             className={cn(buttonVariants({ variant: 'default', size: 'sm' }), 'mx-2')}
           >
-            <PlusIcon className="mr-2 h-4 w-4" />
+            <PlusIcon className="mr-2 size-4" />
             Add
           </Link>
         </div>

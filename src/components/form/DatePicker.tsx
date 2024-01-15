@@ -36,7 +36,7 @@ export function DatePicker({
             variant={'outline'}
             className={cn('w-full justify-start text-left font-normal', !value && 'text-muted-foreground', className)}
           >
-            <CalendarIcon className="mr-2 h-4 w-4" />
+            <CalendarIcon className="mr-2 size-4" />
             {dateValue ? toDate(dateValue) : <span>{placeholder ?? ''}</span>}
           </Button>
         </PopoverTrigger>
@@ -52,7 +52,7 @@ export function DatePicker({
                   onChange?.(null);
                 }}
               >
-                <XCircleIcon className="mr-2 h-4 w-4" />
+                <XCircleIcon className="mr-2 size-4" />
                 Clear
               </Button>
             </PopoverClose>

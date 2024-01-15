@@ -44,11 +44,11 @@ export function Pagination({ count, page, rowsPerPage, onPageChange }: Paginatio
   return (
     <nav className="inline-flex items-center -space-x-1" aria-label="Pagination">
       <Button onClick={() => onPageChange(0)} disabled={page === 0} variant="ghost" size="sm">
-        <ChevronsLeftIcon className="h-5 w-5" aria-hidden="true" />
+        <ChevronsLeftIcon className="size-5" aria-hidden="true" />
         <span className="sr-only">First</span>
       </Button>
       <Button onClick={() => onPageChange(Math.max(0, page - 1))} disabled={page === 0} variant="ghost" size="sm">
-        <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
+        <ChevronLeftIcon className="size-5" aria-hidden="true" />
         <span className="sr-only">Previous</span>
       </Button>
       <div className="min-w-[4rem] py-1">
@@ -66,11 +66,11 @@ export function Pagination({ count, page, rowsPerPage, onPageChange }: Paginatio
         variant="ghost"
         size="sm"
       >
-        <ChevronRightIcon className="h-5 w-5" aria-hidden="true" />
+        <ChevronRightIcon className="size-5" aria-hidden="true" />
         <span className="sr-only">Next</span>
       </Button>
       <Button onClick={() => onPageChange(lastPage)} disabled={page >= lastPage} variant="ghost" size="sm">
-        <ChevronsRightIcon className="h-5 w-5" aria-hidden="true" />
+        <ChevronsRightIcon className="size-5" aria-hidden="true" />
         <span className="sr-only">Last</span>
       </Button>
     </nav>

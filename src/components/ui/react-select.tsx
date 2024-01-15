@@ -24,7 +24,7 @@ export function ReactSelectOption<
         }
       )}
     >
-      {isSelected ? <CheckIcon className="h-4 w-4" /> : <span className="inline-block h-4 w-4" aria-hidden="true" />}
+      {isSelected ? <CheckIcon className="size-4" /> : <span className="inline-block size-4" aria-hidden="true" />}
       <div className="ml-2">{label}</div>
     </div>
   );
@@ -36,7 +36,7 @@ function ReactSelectDropdownIndicator<
 >({ innerProps }: DropdownIndicatorProps<Option, IsMulti, Group>) {
   return (
     <div {...innerProps}>
-      <ChevronDownIcon className="h-4 w-4 opacity-50" />
+      <ChevronDownIcon className="size-4 opacity-50" />
     </div>
   );
 }
@@ -48,7 +48,7 @@ function ReactSelectClearIndicator<
 >({ innerProps }: ClearIndicatorProps<Option, IsMulti, Group>) {
   return (
     <div {...innerProps}>
-      <XIcon className="h-4 w-4 opacity-50" />
+      <XIcon className="size-4 opacity-50" />
     </div>
   );
 }

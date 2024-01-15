@@ -37,7 +37,7 @@ function GenerateSecret() {
   const { mutateAsync, isPending } = useGenerateSecret();
   return data ? (
     <span className="mx-4 my-2 inline-flex">
-      <CheckIcon className="mr-2 h-6 w-6 text-green-500" aria-label="Completed" />
+      <CheckIcon className="mr-2 size-6 text-green-500" aria-label="Completed" />
       Done
     </span>
   ) : (

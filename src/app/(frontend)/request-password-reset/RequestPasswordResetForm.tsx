@@ -62,7 +62,7 @@ export function RequestPasswordResetForm() {
       </CardContent>
       <CardFooter>
         <Button type="submit" disabled={isSubmitting} variant="secondary">
-          {isSubmitting ? <Loader2Icon className="mr-2 h-4 w-4 animate-spin" /> : null}
+          {isSubmitting ? <Loader2Icon className="mr-2 size-4 animate-spin" /> : null}
           Request Reset Password
         </Button>
       </CardFooter>

@@ -26,7 +26,7 @@ export function MyAccountDropdown() {
           disabled={status === 'loading'}
         >
           <span className="sr-only">Open</span>
-          <UserIcon className="h-6 w-6" />
+          <UserIcon className="size-6" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">

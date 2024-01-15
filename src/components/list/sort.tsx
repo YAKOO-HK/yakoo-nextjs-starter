@@ -64,9 +64,9 @@ export function SortButton({
       <DropdownMenuTrigger asChild>
         <Button {...props}>
           {sort?.asc ? (
-            <ArrowUpNarrowWideIcon className="mr-2 h-6 w-6" />
+            <ArrowUpNarrowWideIcon className="mr-2 size-6" />
           ) : (
-            <ArrowDownNarrowWideIcon className="mr-2 h-6 w-6" />
+            <ArrowDownNarrowWideIcon className="mr-2 size-6" />
           )}
           {label ? (
             <>

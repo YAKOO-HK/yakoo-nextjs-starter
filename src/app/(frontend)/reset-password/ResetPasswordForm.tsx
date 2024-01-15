@@ -68,7 +68,7 @@ export function ResetPasswordForm({ token, name }: { token: string; name: string
       </CardContent>
       <CardFooter>
         <Button type="submit" disabled={isSubmitting || isPending} variant="secondary">
-          {isSubmitting || isPending ? <Loader2Icon className="mr-2 h-4 w-4 animate-spin" /> : null}
+          {isSubmitting || isPending ? <Loader2Icon className="mr-2 size-4 animate-spin" /> : null}
           Save
         </Button>
       </CardFooter>
