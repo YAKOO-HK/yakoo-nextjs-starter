@@ -1,7 +1,7 @@
-import React from 'react';
+import { Suspense } from 'react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { Button, buttonVariants } from '@/components/ui/button';
+import { buttonVariants } from '@/components/ui/button';
 import { env } from '@/env';
 import { cn } from '@/lib/utils';
 import { LoginForm } from './LoginForm';
@@ -13,7 +13,9 @@ export const metadata: Metadata = {
 export default async function LoginPage() {
   return (
     <div className="container max-w-screen-md py-4">
-      <LoginForm />
+      <Suspense>
+        <LoginForm />
+      </Suspense>
       <p className="my-2 px-4 text-sm">
         {'If you forgot your password, you can '}
         <Link className="text-sky-800 hover:underline" href="/request-password-reset">
