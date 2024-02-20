@@ -2,16 +2,16 @@ import { cache } from 'react';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { AdminUser, FrontendUser } from '@prisma/client';
+import { createVerifier } from 'fast-jwt';
 import { AuthOptions, getServerSession } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { Secret, TOTP } from 'otpauth';
+import { env } from '@/env';
 import { TotpConfigSchema } from '@/types/totp';
 import { USER_STATUS_ACTIVE, UserLoginSchema, type UserLoginFormData } from '@/types/user';
 import { verifyPassword } from './password';
 import { prisma } from './prisma';
 import 'server-only';
-import { createDecoder, createVerifier } from 'fast-jwt';
-import { env } from '@/env';
 
 class LoginError extends Error {
   constructor(code: 'invalid-credentials' | 'otp-required' | 'invalid-otp') {
