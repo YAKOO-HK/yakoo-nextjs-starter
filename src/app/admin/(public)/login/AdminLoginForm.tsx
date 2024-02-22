@@ -3,6 +3,7 @@
 import { useTransition } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { signIn } from 'next-auth/react';
+import { ControlledPasswordField } from '@/components/form/ControlledPasswordField';
 import { ControlledTextField } from '@/components/form/ControlledTextField';
 import { ZodForm } from '@/components/form/ZodForm';
 import { Button } from '@/components/ui/button';
@@ -47,7 +48,7 @@ const AdminLoginForm = () => {
         </CardHeader>
         <CardContent className="grid grid-cols-1 gap-4">
           <ControlledTextField control={control} name="username" label="Username" />
-          <ControlledTextField control={control} name="password" label="Password" type="password" />
+          <ControlledPasswordField control={control} name="password" label="Password" />
         </CardContent>
         <CardFooter>
           <Button type="submit" disabled={isSubmitting || isPending}>

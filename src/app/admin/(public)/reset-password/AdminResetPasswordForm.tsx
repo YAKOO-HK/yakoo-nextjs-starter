@@ -3,6 +3,7 @@
 import { useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import SuperJSON from 'superjson';
+import { ControlledPasswordField } from '@/components/form/ControlledPasswordField';
 import { ControlledTextField } from '@/components/form/ControlledTextField';
 import { ZodForm } from '@/components/form/ZodForm';
 import { Button } from '@/components/ui/button';
@@ -50,19 +51,11 @@ const AdminResetPasswordForm = ({ token, name }: { token: string; name: string }
           </CardDescription>
         </CardHeader>
         <CardContent className="grid grid-cols-1 gap-4">
-          <ControlledTextField
-            control={control}
-            name="password"
-            label="Password"
-            type="password"
-            autoComplete="off"
-            required
-          />
+          <ControlledPasswordField control={control} name="password" label="Password" autoComplete="off" required />
           <ControlledTextField
             control={control}
             name="passwordConfirmation"
             label="Confirm Password"
-            type="password"
             autoComplete="off"
             required
           />

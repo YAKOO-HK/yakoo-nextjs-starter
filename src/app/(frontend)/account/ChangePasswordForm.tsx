@@ -1,7 +1,7 @@
 'use client';
 
 import SuperJSON from 'superjson';
-import { ControlledTextField } from '@/components/form/ControlledTextField';
+import { ControlledPasswordField } from '@/components/form/ControlledPasswordField';
 import { ZodForm } from '@/components/form/ZodForm';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -41,25 +41,17 @@ function ChangePasswordForm({ className }: { className?: string }) {
       </CardHeader>
       <ZodForm {...methods}>
         <CardContent className="space-y-2">
-          <ControlledTextField
+          <ControlledPasswordField
             control={control}
             name="currentPassword"
             label="Current Password"
-            type="password"
             autoComplete="off"
           />
-          <ControlledTextField
-            control={control}
-            name="password"
-            label="New Password"
-            type="password"
-            autoComplete="off"
-          />
-          <ControlledTextField
+          <ControlledPasswordField control={control} name="password" label="New Password" autoComplete="off" />
+          <ControlledPasswordField
             control={control}
             name="passwordConfirmation"
             label="Confirm New Password"
-            type="password"
             autoComplete="off"
           />
         </CardContent>

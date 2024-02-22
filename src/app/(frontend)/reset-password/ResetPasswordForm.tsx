@@ -4,6 +4,7 @@ import { useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { Loader2Icon } from 'lucide-react';
 import SuperJSON from 'superjson';
+import { ControlledPasswordField } from '@/components/form/ControlledPasswordField';
 import { ControlledTextField } from '@/components/form/ControlledTextField';
 import { ZodForm } from '@/components/form/ZodForm';
 import { Button } from '@/components/ui/button';
@@ -47,20 +48,18 @@ export function ResetPasswordForm({ token, name }: { token: string; name: string
         <CardDescription>Hi {name}, please enter your new password below.</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        <ControlledTextField
+        <ControlledPasswordField
           control={control}
           name="password"
           label="Password"
-          type="password"
           autoComplete="off"
           required
           className="bg-background"
         />
-        <ControlledTextField
+        <ControlledPasswordField
           control={control}
           name="passwordConfirmation"
           label="Confirm Password"
-          type="password"
           autoComplete="off"
           required
           className="bg-background"

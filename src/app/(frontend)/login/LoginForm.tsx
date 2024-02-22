@@ -4,6 +4,7 @@ import { useState, useTransition } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { signIn } from 'next-auth/react';
 import { z } from 'zod';
+import { ControlledPasswordField } from '@/components/form/ControlledPasswordField';
 import { ControlledTextField } from '@/components/form/ControlledTextField';
 import { ZodForm } from '@/components/form/ZodForm';
 import { Button } from '@/components/ui/button';
@@ -73,12 +74,14 @@ export function LoginForm() {
                 name="totp"
                 placeholder="******"
                 autoComplete="off"
+                className="text-center text-lg font-medium tabular-nums tracking-[0.2rem] md:text-xl"
+                maxLength={6}
               />
             </div>
           ) : (
             <div className="space-y-4">
               <ControlledTextField control={control} label="Username" name="username" />
-              <ControlledTextField control={control} label="Password" name="password" type="password" />
+              <ControlledPasswordField control={control} label="Password" name="password" />
             </div>
           )}
         </CardContent>
