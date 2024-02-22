@@ -1,11 +1,11 @@
 'use client';
 
+import { toast } from 'sonner';
 import SuperJSON from 'superjson';
 import { ControlledPasswordField } from '@/components/form/ControlledPasswordField';
 import { ZodForm } from '@/components/form/ZodForm';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { useToast } from '@/components/ui/use-toast';
 import { useZodForm } from '@/hooks/useZodForm';
 import { fetchResponseHandler } from '@/lib/fetch-utils';
 import { ChangePasswordSchema } from '@/types/user';
@@ -13,7 +13,6 @@ import { ChangePasswordSchema } from '@/types/user';
 const EMPTY_FORM = { currentPassword: '', password: '', passwordConfirmation: '' };
 
 function ChangePasswordForm({ className }: { className?: string }) {
-  const { toast } = useToast();
   const methods = useZodForm({
     zodSchema: ChangePasswordSchema,
     defaultValues: EMPTY_FORM,
@@ -24,7 +23,7 @@ function ChangePasswordForm({ className }: { className?: string }) {
         headers: { 'Content-Type': 'application/json' },
         body: SuperJSON.stringify(values),
       }).then(fetchResponseHandler());
-      toast({ description: 'Password updated.', title: 'Success' });
+      toast.success('Password updated.');
       reset(EMPTY_FORM);
     },
   });

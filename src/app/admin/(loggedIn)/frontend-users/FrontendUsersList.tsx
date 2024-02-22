@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { format } from 'date-fns';
 import { atom } from 'jotai';
 import { PencilIcon, SendIcon } from 'lucide-react';
+import { toast } from 'sonner';
 import type { AdminFrontendUserRow } from '@/app/api/admin/frontend-users/route';
 import ConfirmButton from '@/components/ConfirmButton';
 import { ControlledDatePickerField } from '@/components/form/ControlledDatePickerField';
@@ -12,7 +13,6 @@ import { SimpleSearchForm } from '@/components/form/SimpleSearchForm';
 import { EnhancedTable, TableCell, TableRow } from '@/components/list/table';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { useToast } from '@/components/ui/use-toast';
 import useListData from '@/hooks/useListData';
 import { fetchResponseHandler } from '@/lib/fetch-utils';
 import { AdminFrontendUserSearchSchema, type AdminFrontendUserSearchParams } from '@/types/admin/frontend-users';
@@ -72,7 +72,6 @@ function UserSearchForm({
 }
 
 const UserRow = ({ rowData, refetch }: { rowData: AdminFrontendUserRow; refetch: () => void }) => {
-  const { toast } = useToast();
   return (
     <TableRow>
       <TableCell>{rowData.username}</TableCell>
@@ -101,9 +100,9 @@ const UserRow = ({ rowData, refetch }: { rowData: AdminFrontendUserRow; refetch:
                 await fetch(`/api/admin/frontend-users/${rowData.id}/request-password-reset`, { method: 'POST' }).then(
                   fetchResponseHandler()
                 );
-                toast({ description: 'Password reset email sent', title: 'Success' });
+                toast.success('Success', { description: 'Password reset email sent' });
               } catch (e: any) {
-                toast({ description: e.message, title: 'Error', variant: 'destructive' });
+                toast.error('Error', { description: e instanceof Error ? e.message : new String(e) });
               }
             }}
           >

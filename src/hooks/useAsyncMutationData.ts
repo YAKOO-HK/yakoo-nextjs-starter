@@ -1,7 +1,7 @@
 import { QueryOptions, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { type DeepPartial } from 'react-hook-form';
+import { toast } from 'sonner';
 import SuperJSON from 'superjson';
-import { useToast } from '@/components/ui/use-toast';
 import { fetchResponseHandler } from '@/lib/fetch-utils';
 
 function useAsyncMutationData<TData, TVariables = DeepPartial<TData>>({
@@ -21,7 +21,6 @@ function useAsyncMutationData<TData, TVariables = DeepPartial<TData>>({
   useSuperJson?: boolean;
   disableToast?: boolean;
 }) {
-  const { toast } = useToast();
   const queryClient = useQueryClient();
   const queryResult = useQuery<TData>({
     queryKey: [url],
@@ -37,7 +36,7 @@ function useAsyncMutationData<TData, TVariables = DeepPartial<TData>>({
       }).then(fetchResponseHandler<TData>(useSuperJson)),
     onSuccess: (data) => {
       queryClient.setQueryData([url], data);
-      !disableToast && toast({ description: successMessage });
+      !disableToast && toast.success(successMessage);
       onSuccess?.(data);
     },
   });

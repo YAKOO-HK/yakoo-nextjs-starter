@@ -2,13 +2,13 @@
 
 import { useTransition } from 'react';
 import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 import SuperJSON from 'superjson';
 import { ControlledPasswordField } from '@/components/form/ControlledPasswordField';
 import { ControlledTextField } from '@/components/form/ControlledTextField';
 import { ZodForm } from '@/components/form/ZodForm';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { useToast } from '@/components/ui/use-toast';
 import { useZodForm } from '@/hooks/useZodForm';
 import { fetchResponseHandler } from '@/lib/fetch-utils';
 import { ResetPasswordSchema } from '@/types/user';
@@ -16,7 +16,6 @@ import { ResetPasswordSchema } from '@/types/user';
 const AdminResetPasswordForm = ({ token, name }: { token: string; name: string }) => {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
-  const { toast } = useToast();
   const methods = useZodForm({
     zodSchema: ResetPasswordSchema,
     defaultValues: { token, password: '', passwordConfirmation: '' },
@@ -27,8 +26,7 @@ const AdminResetPasswordForm = ({ token, name }: { token: string; name: string }
         headers: { 'Content-Type': 'application/json' },
       }).then(fetchResponseHandler());
       startTransition(() => {
-        toast({
-          title: 'Success',
+        toast.success('Success', {
           description: 'Password has been updated. Please login with your new password.',
         });
         router.replace('/admin/login');

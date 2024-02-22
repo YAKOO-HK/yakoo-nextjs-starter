@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { format } from 'date-fns';
 import { atom } from 'jotai';
 import { EditIcon, SendIcon, TrashIcon } from 'lucide-react';
+import { toast } from 'sonner';
 import type { AdminUserRow } from '@/app/api/admin/admin-users/route';
 import ConfirmButton from '@/components/ConfirmButton';
 import { ControlledDropdown } from '@/components/form/ControlledDropdown';
@@ -11,7 +12,6 @@ import { SimpleSearchForm } from '@/components/form/SimpleSearchForm';
 import { EnhancedTable, TableCell, TableRow } from '@/components/list/table';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { useToast } from '@/components/ui/use-toast';
 import useListData from '@/hooks/useListData';
 import { fetchResponseHandler } from '@/lib/fetch-utils';
 import { AdminUserSearchSchema, type AdminUserSearchParams } from '@/types/admin/admin-users';
@@ -61,7 +61,6 @@ function UserSearchForm({
 }
 
 const UserRow = ({ rowData, refetch }: { rowData: AdminUserRow; refetch: () => void }) => {
-  const { toast } = useToast();
   return (
     <TableRow>
       <TableCell>{rowData.username}</TableCell>
@@ -101,9 +100,9 @@ const UserRow = ({ rowData, refetch }: { rowData: AdminUserRow; refetch: () => v
                 await fetch(`/api/admin/admin-users/${rowData.id}/request-password-reset`, { method: 'POST' }).then(
                   fetchResponseHandler()
                 );
-                toast({ description: 'Password reset email sent', title: 'Success' });
+                toast.success('Success', { description: 'Password reset email sent' });
               } catch (e: any) {
-                toast({ description: e.message, title: 'Error', variant: 'destructive' });
+                toast.error('Error', { description: e instanceof Error ? e.message : new String(e) });
               }
             }}
           >
@@ -116,10 +115,12 @@ const UserRow = ({ rowData, refetch }: { rowData: AdminUserRow; refetch: () => v
                 await fetch(`/api/admin/admin-users/${rowData.id}`, {
                   method: 'DELETE',
                 }).then(fetchResponseHandler());
-                toast({ title: `Admin User [${rowData.username}] deleted.` });
+                toast.success(`Admin User [${rowData.username}] deleted.`);
                 refetch();
               } catch (e) {
-                toast({ title: `Error deleting Admin User ${rowData.username}.` });
+                toast.error(`Error deleting Admin User ${rowData.username}.`, {
+                  description: e instanceof Error ? e.message : new String(e),
+                });
               }
             }}
             variant="destructive"
