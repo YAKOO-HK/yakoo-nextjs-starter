@@ -15,7 +15,7 @@ export default function NotFound() {
   return (
     <>
       <Header />
-      <main className="container prose prose-neutral my-4 min-h-[10rem]">
+      <main className="container prose prose-neutral my-4 min-h-40">
         <h1 className={cn(typographyVariants({ variant: 'h2' }))}>Page Not Found (404)</h1>
         <p>Could not find requested resource.</p>
       </main>

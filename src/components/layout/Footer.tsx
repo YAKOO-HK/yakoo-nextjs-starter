@@ -10,7 +10,7 @@ export function Footer({ className }: { className?: string }) {
           <Link href="/privacy-policy" className="hover:underline">
             Privacy Policy
           </Link>
-          <Separator orientation="vertical" className="h-[1rem] bg-current" />
+          <Separator orientation="vertical" className="h-4 bg-current" />
           <Link href="/web-accessibility" className="hover:underline">
             Web Accessibility
           </Link>

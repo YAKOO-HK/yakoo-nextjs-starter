@@ -22,7 +22,7 @@ export function PageSelect({ count, page, rowsPerPage, onPageChange, ...props }:
       <SelectTrigger className="h-9 px-2 py-1">
         <SelectValue />
       </SelectTrigger>
-      <SelectContent className="max-h-96 min-w-[6rem] overflow-y-auto">
+      <SelectContent className="max-h-96 min-w-24 overflow-y-auto">
         {range(lowestPage, highestPage + 1).map((option) => (
           <SelectItem key={option} value={`${option}`}>
             {option + 1}
@@ -51,7 +51,7 @@ export function Pagination({ count, page, rowsPerPage, onPageChange }: Paginatio
         <ChevronLeftIcon className="size-5" aria-hidden="true" />
         <span className="sr-only">Previous</span>
       </Button>
-      <div className="min-w-[4rem] py-1">
+      <div className="min-w-16 py-1">
         <PageSelect
           disabled={lastPage <= 1}
           count={count}
