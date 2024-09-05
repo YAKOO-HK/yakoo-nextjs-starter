@@ -30,7 +30,7 @@ export const POST = withBodyValidation(RequestPasswordResetSchema, async (_req, 
 
   await getDefaultMailer().sendMail({
     to: email,
-    ...getForgotPasswordEmail({ user, passwordResetToken }),
+    ...(await getForgotPasswordEmail({ user, passwordResetToken })),
   });
 
   return responseJson(null, { status: 200 });

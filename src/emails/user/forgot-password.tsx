@@ -3,7 +3,7 @@ import { env } from '@/env';
 import EmailLayout from '../layout';
 import 'server-only';
 
-export const getForgotPasswordEmail = ({
+export const getForgotPasswordEmail = async ({
   user,
   passwordResetToken,
 }: {
@@ -14,7 +14,7 @@ export const getForgotPasswordEmail = ({
 }) => {
   return {
     subject: 'Reset your password',
-    html: render(<ForgotPasswordEmail user={user} passwordResetToken={passwordResetToken} />),
+    html: await render(<ForgotPasswordEmail user={user} passwordResetToken={passwordResetToken} />),
   };
 };
 

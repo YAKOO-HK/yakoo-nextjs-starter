@@ -22,7 +22,7 @@ export const POST = withAuthentication('admin', async (_req, { params: { id } }:
 
   await getDefaultMailer().sendMail({
     to: frontendUser.email,
-    ...getForgotPasswordEmail({ user: frontendUser, passwordResetToken }),
+    ...(await getForgotPasswordEmail({ user: frontendUser, passwordResetToken })),
   });
 
   return responseJson(null, { status: 200 });

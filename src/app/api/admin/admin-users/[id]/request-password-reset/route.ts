@@ -18,7 +18,7 @@ export const POST = withAdminRole('sysadmin', async (_req, { params: { id } }: {
 
   await getDefaultMailer().sendMail({
     to: admin.email,
-    ...getForgotPasswordEmail({ user: admin, passwordResetToken }),
+    ...(await getForgotPasswordEmail({ user: admin, passwordResetToken })),
   });
 
   return responseJson(null, { status: 200 });

@@ -49,7 +49,7 @@ function GenerateSecret() {
 
 function DisplayQrCode() {
   const data = useAtomValue(totpAtom);
-  return data?.url ? <QRCodeSVG value={data.url} size={384} includeMargin /> : null;
+  return data?.url ? <QRCodeSVG value={data.url} size={384} marginSize={4} /> : null;
 }
 
 function VerifySetup() {
