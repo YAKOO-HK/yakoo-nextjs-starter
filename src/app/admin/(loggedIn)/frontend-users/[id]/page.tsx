@@ -3,13 +3,15 @@ import { notFound } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
 import { FrontendUserUpdateForm } from './FrontendUserUpdateForm';
 
-export const generateMetadata = async ({ params }: { params: { id: string } }) => {
+export const generateMetadata = async ({ params }: { params: Promise<{ id: string }> }) => {
+  const id = (await params).id;
   return {
-    title: `Frontend User: ${params.id}`,
+    title: `Frontend User: ${id}`,
   } as Metadata;
 };
 
-export default async function FrontendUserPage({ params: { id } }: { params: { id: string } }) {
+export default async function FrontendUserPage({ params }: { params: Promise<{ id: string }> }) {
+  const id = (await params).id;
   const frontendUser = await prisma.frontendUser.findUnique({
     where: { id },
   });

@@ -1,4 +1,3 @@
-import { NextRequest } from 'next/server';
 import qs from 'qs';
 import SuperJSON from 'superjson';
 
@@ -10,11 +9,11 @@ export function responseJson(data: any, init: ResponseInit = {}, useSuperJson = 
   });
 }
 
-export async function parseRequestBody(req: NextRequest, useSuperJson = true) {
+export async function parseRequestBody(req: Request, useSuperJson = true) {
   return useSuperJson ? SuperJSON.parse(await req.text()) : req.json();
 }
 
-export function parseSearchParams(req: NextRequest) {
+export function parseSearchParams(req: Request) {
   const url = new URL(req.url);
   return qs.parse(url.searchParams.toString());
 }

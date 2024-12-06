@@ -9,7 +9,7 @@ export interface ControlledHCaptchaProps<
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 > extends Omit<React.HTMLAttributes<HTMLDivElement>, 'defaultValue'>,
     Omit<ControllerProps<TFieldValues, TName>, 'render'> {
-  hCaptchaRef?: React.RefObject<HCaptcha>;
+  hCaptchaRef: React.Ref<HCaptcha | null>;
 }
 
 function ControlledHCaptcha<
@@ -34,16 +34,15 @@ function ControlledHCaptcha<
       render={({ field: { onChange, onBlur } }) => (
         <FormItem {...props}>
           <FormControl>
-            {React.createElement(HCaptcha, {
-              // temp solution after ts5.0 breaks HCaptcha
-              sitekey: env.NEXT_PUBLIC_HCAPTCHA_SITEKEY,
-              onVerify: (token, _ekey) => {
+            <HCaptcha
+              sitekey={env.NEXT_PUBLIC_HCAPTCHA_SITEKEY}
+              onVerify={(token, _ekey) => {
                 // console.log(token, _ekey);
                 onChange(token);
                 onBlur();
-              },
-              ref: hCaptchaRef,
-            })}
+              }}
+              ref={hCaptchaRef}
+            />
           </FormControl>
           <FormMessage />
         </FormItem>

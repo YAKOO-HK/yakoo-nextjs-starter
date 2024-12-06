@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
     const expiresIn =
       new Date(extract.conditions.notOnOrAfter).getTime() - new Date(extract.conditions.notBefore).getTime();
     const signSync = createSigner({
-      key: env.NEXTAUTH_SECRET, // reuse the nextauth secret with HS256
+      key: env.AUTH_SECRET, // reuse the nextauth secret with HS256
       algorithm: 'HS256',
       expiresIn: expiresIn,
       aud: extract.audience,
@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
       sub: extract.nameID,
     });
     const token = signSync(extract.attributes);
-    cookies().set('x-saml-token', token, {
+    (await cookies()).set('x-saml-token', token, {
       path: '/',
       sameSite: 'strict',
       secure: true,
@@ -49,6 +49,6 @@ export async function POST(req: NextRequest) {
 }
 
 export async function GET(_req: NextRequest) {
-  const samlToken = cookies().get('x-saml-token');
+  const samlToken = (await cookies()).get('x-saml-token');
   return responseJson({ token: samlToken?.value ?? '' });
 }

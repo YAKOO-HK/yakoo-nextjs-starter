@@ -8,11 +8,11 @@ export const metadata: Metadata = {
   title: 'Admin Login',
 };
 
-export default async function AdminLoginPage({ searchParams }: { searchParams: { callbackUrl?: string } }) {
+export default async function AdminLoginPage({ searchParams }: { searchParams: Promise<{ callbackUrl?: string }> }) {
   const user = await getSessionUser();
   if (user?.type === 'admin') {
     // redirect if user already logged in
-    redirect(searchParams.callbackUrl ?? '/admin/dashboard');
+    redirect((await searchParams).callbackUrl ?? '/admin/dashboard');
   }
   return (
     <div className="container max-w-screen-md py-4">

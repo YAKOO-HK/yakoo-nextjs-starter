@@ -8,6 +8,7 @@ export function middleware(request: NextRequest) {
     request: { headers: requestHeaders },
   });
 }
+
 export const config = {
   matcher: '/((?!_next/static|_next/image|images|favicon.ico|sitemap|robots.txt).*)',
 };

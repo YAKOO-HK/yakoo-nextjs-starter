@@ -23,11 +23,8 @@ const getUser = async (token: string) => {
 };
 
 export const revalidate = 0;
-export default async function ResetPasswordPage({
-  searchParams: { token } = {},
-}: {
-  searchParams?: { token?: string };
-}) {
+export default async function ResetPasswordPage(props: { searchParams: Promise<{ token?: string }> }) {
+  const { token } = await props.searchParams;
   if (!token) {
     notFound();
   }

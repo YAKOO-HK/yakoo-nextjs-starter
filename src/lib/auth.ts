@@ -3,9 +3,10 @@ import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { AdminUser, FrontendUser } from '@prisma/client';
 import { createVerifier } from 'fast-jwt';
-import { AuthOptions, getServerSession } from 'next-auth';
+import NextAuth, { CredentialsSignin } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { Secret, TOTP } from 'otpauth';
+import { z } from 'zod';
 import { env } from '@/env';
 import { TotpConfigSchema } from '@/types/totp';
 import { USER_STATUS_ACTIVE, UserLoginSchema, type UserLoginFormData } from '@/types/user';
@@ -13,11 +14,11 @@ import { verifyPassword } from './password';
 import { prisma } from './prisma';
 import 'server-only';
 
-class LoginError extends Error {
+class LoginError extends CredentialsSignin {
+  code: 'invalid-credentials' | 'otp-required' | 'invalid-otp';
   constructor(code: 'invalid-credentials' | 'otp-required' | 'invalid-otp') {
-    super(code);
-    this.name = 'LoginError';
-    Object.setPrototypeOf(this, LoginError.prototype);
+    super({ code });
+    this.code = code;
   }
 }
 
@@ -67,7 +68,10 @@ async function handleAdminLogin(loginForm: UserLoginFormData) {
   };
 }
 
-export const authOptions: AuthOptions = {
+const TokenSchema = z.object({
+  token: z.string(),
+});
+const authOptions: Parameters<typeof NextAuth>[0] = {
   session: {
     strategy: 'jwt',
   },
@@ -109,8 +113,13 @@ export const authOptions: AuthOptions = {
         }
 
         // console.log('samlify.authorize', credentials);
-        const verifySync = createVerifier({ key: env.NEXTAUTH_SECRET });
-        const payload = verifySync(credentials?.token ?? '');
+        const result = TokenSchema.safeParse(credentials);
+        if (!result.success) {
+          throw new LoginError('invalid-credentials');
+        }
+
+        const verifySync = createVerifier({ key: env.AUTH_SECRET });
+        const payload = verifySync(result.data.token ?? '');
         // console.log(payload);
         const user = await prisma.frontendUser.findFirst({
           where: { email: payload.email, status: USER_STATUS_ACTIVE },
@@ -148,17 +157,27 @@ export const authOptions: AuthOptions = {
       };
     },
     async session({ session, token }) {
-      // console.log('session', params);
+      // console.log('session', session);
+      // console.log('token', token);
       if (token) {
-        session.user = token;
+        session.user = {
+          id: token.id ?? '',
+          email: token.email ?? '',
+          type: token.type ?? 'frontend',
+          name: token.name ?? null,
+          image: null,
+          emailVerified: null,
+        };
       }
       return session;
     },
   },
 };
 
-export function getRedirectUrl() {
-  const reqHeaders = headers();
+export const { auth, handlers, signIn, signOut } = NextAuth(authOptions);
+
+export async function getRedirectUrl() {
+  const reqHeaders = await headers();
   // reqHeaders.forEach((value, key) => {
   //   console.log([key, value]);
   // });
@@ -176,11 +195,12 @@ export function getRedirectUrl() {
 }
 
 export const getSessionUser = cache(async function () {
-  const session = await getServerSession(authOptions);
+  const session = await auth();
   return session?.user ?? null;
 });
 
-export const getActiveFrontendUser = cache(async (id: FrontendUser['id']) => {
+export const getActiveFrontendUser = cache(async (id?: FrontendUser['id']) => {
+  if (!id) return null;
   return await prisma.frontendUser.findUnique({
     where: { id, status: USER_STATUS_ACTIVE },
     select: { id: true, username: true, email: true, name: true, enableMfa: true, status: true },
@@ -188,18 +208,19 @@ export const getActiveFrontendUser = cache(async (id: FrontendUser['id']) => {
 });
 
 export const requireFrontendUser = cache(async function () {
-  const session = await getServerSession(authOptions);
+  const session = await auth();
   if (session?.user?.type !== 'frontend') {
-    return redirect(`/login?callbackUrl=${getRedirectUrl()}`);
+    return redirect(`/login?callbackUrl=${await getRedirectUrl()}`);
   }
   const dbUser = await getActiveFrontendUser(session.user.id);
   if (!dbUser) {
-    return redirect(`/logout?callbackUrl=${getRedirectUrl()}`);
+    return redirect(`/logout?callbackUrl=${await getRedirectUrl()}`);
   }
   return dbUser;
 });
 
-export const getActiveAdminUser = cache(async (id: AdminUser['id']) => {
+export const getActiveAdminUser = cache(async (id?: AdminUser['id']) => {
+  if (!id) return null;
   return await prisma.adminUser.findUnique({
     where: { id, status: USER_STATUS_ACTIVE },
     select: { id: true, username: true, email: true, name: true },
@@ -207,13 +228,13 @@ export const getActiveAdminUser = cache(async (id: AdminUser['id']) => {
 });
 
 export const requireAdminUser = cache(async function () {
-  const session = await getServerSession(authOptions);
+  const session = await auth();
   if (session?.user?.type !== 'admin') {
-    return redirect(`/admin/login?callbackUrl=${getRedirectUrl()}`);
+    return redirect(`/admin/login?callbackUrl=${await getRedirectUrl()}`);
   }
   const dbUser = await getActiveAdminUser(session.user.id);
   if (!dbUser) {
-    return redirect(`/admin/logout?callbackUrl=${getRedirectUrl()}`);
+    return redirect(`/admin/logout?callbackUrl=${await getRedirectUrl()}`);
   }
   return dbUser;
 });

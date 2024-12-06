@@ -10,8 +10,8 @@ export const env = createEnv({
     // Database (Prisma)
     DATABASE_URL: z.string().url(),
     // NextAuth
-    NEXTAUTH_URL: z.string().url(),
-    NEXTAUTH_SECRET: z.string().min(16),
+    AUTH_URL: z.string().url(),
+    AUTH_SECRET: z.string().min(16),
     // hCaptcha
     HCAPTCHA_SECRET: z.string().min(1).default('0x0000000000000000000000000000000000000000'),
     HCAPTCHA_VERIFY_URL: z.string().url().default('https://hcaptcha.com/siteverify'),
@@ -65,8 +65,8 @@ export const env = createEnv({
    */
   runtimeEnv: {
     DATABASE_URL: process.env.DATABASE_URL,
-    NEXTAUTH_URL: process.env.NEXTAUTH_URL,
-    NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
+    AUTH_URL: process.env.AUTH_URL,
+    AUTH_SECRET: process.env.AUTH_SECRET,
     HCAPTCHA_SECRET: process.env.HCAPTCHA_SECRET,
     HCAPTCHA_VERIFY_URL: process.env.HCAPTCHA_VERIFY_URL,
     HCAPTCHA_SCORE_THRESHOLD: process.env.HCAPTCHA_SCORE_THRESHOLD,
