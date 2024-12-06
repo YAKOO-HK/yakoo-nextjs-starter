@@ -301,15 +301,11 @@ function EnhancedTableInner<TRowData, TRowProps>(
     }
   };
 
-  React.useImperativeHandle(
-    ref,
-    () => {
-      return {
-        getSelectedRows: () => selectedRows,
-      };
-    },
-    [selectedRows]
-  );
+  React.useImperativeHandle(ref, () => {
+    return {
+      getSelectedRows: () => selectedRows,
+    };
+  }, [selectedRows]);
 
   const handleChangeSort = React.useCallback(
     (event: React.MouseEvent<unknown>, property: string) => {

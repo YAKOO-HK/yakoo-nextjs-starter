@@ -4,12 +4,12 @@ import { addDays } from 'date-fns';
 import { responseJson } from '@/lib/api-utils';
 
 export const GET = async () => {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   return responseJson({ accepted: Boolean(cookieStore.get('accepted-cookie-usage')) });
 };
 
 export const POST = async () => {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   cookieStore.set({
     name: 'accepted-cookie-usage',
     value: '1',

@@ -17,7 +17,7 @@ const myStore = createStore();
 
 export const Providers = ({ children }: { children?: React.ReactNode }) => {
   return (
-    <SessionProvider>
+    <SessionProvider refetchOnWindowFocus>
       <JotaiProvider store={myStore}>
         <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
       </JotaiProvider>

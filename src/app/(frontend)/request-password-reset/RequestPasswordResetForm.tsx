@@ -15,7 +15,7 @@ import { fetchResponseHandler } from '@/lib/fetch-utils';
 import { RequestPasswordResetSchema } from '@/types/user';
 
 export function RequestPasswordResetForm() {
-  const hCaptchaRef = useRef<HCaptcha>(null);
+  const hCaptchaRef = useRef<HCaptcha | null>(null);
   const methods = useZodForm({
     zodSchema: RequestPasswordResetSchema,
     defaultValues: { email: '', hCaptcha: '' },

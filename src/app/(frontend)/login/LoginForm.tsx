@@ -29,23 +29,29 @@ export function LoginForm() {
     } satisfies UserLoginFormData,
     onSubmit: async ({ username, password, totp }) => {
       const result = await signIn('credentials', {
+        type: 'frontend',
         username,
         password,
         totp,
-        type: 'frontend',
         redirect: false,
+        callbackUrl,
       });
-
-      if (result?.ok && !result?.error) {
+      if (!result) {
+        methods.setError('password', { message: 'System Error. Please try again later' });
+        return;
+      }
+      // console.log(result);
+      if (result.ok && !result.error) {
         startTransition(() => {
           router.refresh();
           router.replace(callbackUrl);
         });
         return;
       }
-      if (result?.error === 'otp-required') {
+
+      if (result.code === 'otp-required') {
         setShowTotp(true);
-      } else if (result?.error === 'invalid-otp') {
+      } else if (result.code === 'invalid-otp') {
         methods.setError('totp', { message: 'Invalid OTP.' });
       } else {
         methods.setError('password', { message: 'Invalid email or password.' });

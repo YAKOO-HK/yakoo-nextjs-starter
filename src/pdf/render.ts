@@ -3,7 +3,7 @@ import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 import type { TDocumentDefinitions } from 'pdfmake/interfaces';
 
 export function renderPdf(docDefinitions: TDocumentDefinitions) {
-  return pdfMake.createPdf(docDefinitions, undefined, undefined, pdfFonts.pdfMake.vfs); // TODO: setup default fonts/vfs etc
+  return pdfMake.createPdf(docDefinitions, undefined, undefined, pdfFonts.vfs); // TODO: setup default fonts/vfs etc
 }
 
 export async function renderPdfToBuffer(docDefinitions: TDocumentDefinitions) {

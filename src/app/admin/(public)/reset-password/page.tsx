@@ -21,8 +21,8 @@ const getAdminUser = async (token: string) => {
   });
 };
 
-export default async function AdminResetPasswordPage({ searchParams }: { searchParams: { token?: string } }) {
-  const token = searchParams.token;
+export default async function AdminResetPasswordPage({ searchParams }: { searchParams: Promise<{ token?: string }> }) {
+  const token = (await searchParams).token;
   if (!token) {
     notFound();
   }

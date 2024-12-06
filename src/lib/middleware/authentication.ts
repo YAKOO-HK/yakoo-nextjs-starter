@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Session } from 'next-auth';
-import { getServerSession } from 'next-auth/next';
-import { authOptions, getActiveAdminUser, getActiveFrontendUser } from '@/lib/auth';
+import { auth, getActiveAdminUser, getActiveFrontendUser } from '@/lib/auth';
 import { getAdminUserPermissions } from '@/lib/rbac';
 import 'server-only';
 
@@ -12,7 +11,7 @@ export function withAuthentication(
 ) {
   return async function (req: NextRequest, ...args: any[]) {
     // console.log(args);
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session || !session.user) {
       return NextResponse.json(null, { status: 401 });
     } else if (!!role && session.user.type !== role) {
@@ -42,7 +41,7 @@ export function withAdminRole(
   handler: (req: NextRequest, ...args: any[]) => Promise<Response> | Response
 ) {
   return withAuthentication('admin', handler, async (user) => {
-    const roleAndPermissions = await getAdminUserPermissions(user.id);
+    const roleAndPermissions = await getAdminUserPermissions(user.id ?? '');
     if (!roleAndPermissions.roles.has(role)) {
       return false;
     }
